@@ -7,7 +7,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/rimworld-env.sh"
 
 [ -f "$PLAYER_LOG" ] || { echo "No Player.log at: $PLAYER_LOG (has the game run?)" >&2; exit 1; }
 
-PATTERN='Exception|Error|error|Could not|Failed|XML error'
+# Deliberately not a bare "Failed": Unity dumps a bucket-allocator table full of
+# "Failed Allocations" on exit, which is not an error and drowns everything else.
+PATTERN='Exception|[Ee]rror|Could not|Failed to|Cannot|Rejected'
 [ -n "${1:-}" ] && PATTERN="$1|$PATTERN"
 
 echo "--- $PLAYER_LOG (modified $(date -r "$PLAYER_LOG" '+%Y-%m-%d %H:%M:%S'))"
