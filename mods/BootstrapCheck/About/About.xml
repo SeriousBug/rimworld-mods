@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>kaan.bootstrapcheck</packageId>
+  <name>Bootstrap Check</name>
+  <author>kaan</author>
+  <description>Test mod for the modding monorepo. Exercises Def loading, PatchOperations, DefInjected translations, and a Harmony-patched C# assembly. Every one of those reports to Player.log with the [BootstrapCheck] prefix.</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+</ModMetaData>

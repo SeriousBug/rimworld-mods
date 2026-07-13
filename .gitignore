@@ -1,0 +1,6 @@
+bin/
+obj/
+mods/*/Assemblies/
+*.user
+.DS_Store
+Local.props

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- <tab> is ResearchProjectDef.cs:30 in the decompiled tree. Main is the only ResearchTabDef in Core. -->
+  <ResearchProjectDef>
+    <defName>BootstrapCheck_Test</defName>
+    <label>bootstrap check (not injected)</label>
+    <description>If this project appears in the research tab, the mod's Defs/ folder loaded.</description>
+    <baseCost>100</baseCost>
+    <techLevel>Neolithic</techLevel>
+    <tab>Main</tab>
+    <researchViewX>0.00</researchViewX>
+    <researchViewY>0.10</researchViewY>
+  </ResearchProjectDef>
+
+</Defs>
