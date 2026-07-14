@@ -41,6 +41,10 @@ Requires Harmony. Safe to add to an existing save. Removing it mid-save leaves t
 
 Should not conflict with other mods that touch equipment, but if you find one that does, say so in the comments.
 
+[h2]Source[/h2]
+
+Open source, MIT licensed. The code lives at [url=https://github.com/SeriousBug/rimworld-mods]github.com/SeriousBug/rimworld-mods[/url], along with my other RimWorld mods. Bug reports and pull requests are welcome; if you are reporting a bug, attach your Player.log.
+
 [h2]Changelog[/h2]
 
 [b]1.0[/b]
