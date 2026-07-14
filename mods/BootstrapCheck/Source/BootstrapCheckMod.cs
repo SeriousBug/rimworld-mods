@@ -10,7 +10,7 @@ public class BootstrapCheckMod : Mod
 
     public BootstrapCheckMod(ModContentPack content) : base(content)
     {
-        new Harmony("kaan.bootstrapcheck").PatchAll(Assembly.GetExecutingAssembly());
+        new Harmony("connor.bootstrapcheck").PatchAll(Assembly.GetExecutingAssembly());
         Log.Message($"{LogPrefix} assembly loaded and Harmony patches applied.");
     }
 }
