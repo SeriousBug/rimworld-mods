@@ -11,7 +11,7 @@ All of them need [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?i
 
 Pawns can carry spare weapons in their inventory and swap between them.
 
-Right-click a weapon on the ground to have a pawn pick it up as a sidearm. Draft the pawn and a button
+Right-click a weapon on the ground to have a pawn pick it up as a sidearm. Select the pawn and a gizmo
 appears for each weapon they are carrying; click it to swap. A pawn who is shooting and gets rushed will
 automatically draw a melee weapon, then put it away once the enemy backs off.
 
@@ -28,7 +28,7 @@ when the pawn dies.
 Swap a colonist into their combat gear with one button, and back out of it with another.
 
 Select colonists and press **Gear up**. They stop what they are doing, take off what they are wearing,
-and put on the best armour their combat apparel policy allows. Press **Stand down** and they change back
+and put on the best armour their combat policy allows. Press **Stand down** and they change back
 into the clothes they had on before. Each pawn's combat policy is picked by right-clicking the button.
 
 Clothes taken off are stashed in the pawn's own inventory by default, so nobody can haul them away before
