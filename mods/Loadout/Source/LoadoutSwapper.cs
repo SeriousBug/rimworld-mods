@@ -160,14 +160,25 @@ public static class LoadoutSwapper
             }
 
             restorable.Add(apparel);
-            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_EquipDrop, apparel));
+            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_EquipDeposit, apparel));
         }
 
-        // Armour the restored policy disallows but no restored garment displaces comes off afterwards.
+        // Every piece of armour that comes off, whether displaced by a restored garment or simply
+        // disallowed by the restored policy, is carried rather than dropped, then put away in storage.
+        var comingOff = new List<Apparel>();
         foreach (var worn in pawn.apparel.WornApparel.ToList())
         {
             if (IsUntouchable(pawn, worn) || stashed.Contains(worn))
             {
+                continue;
+            }
+
+            var displacedBySwap = restorable.Any(a =>
+                !ApparelUtility.CanWearTogether(a.def, worn.def, pawn.RaceProps.body));
+
+            if (displacedBySwap)
+            {
+                comingOff.Add(worn);
                 continue;
             }
 
@@ -176,14 +187,15 @@ public static class LoadoutSwapper
                 continue;
             }
 
-            var handledBySwap = restorable.Any(a =>
-                !ApparelUtility.CanWearTogether(a.def, worn.def, pawn.RaceProps.body));
-            if (handledBySwap)
-            {
-                continue;
-            }
-
+            comingOff.Add(worn);
             jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_DoffApparel, worn));
+        }
+
+        // Queued last, so the pawn is fully dressed again before walking the armour over to a shelf.
+        // The job no-ops if the piece never made it into the inventory.
+        foreach (var armour in comingOff)
+        {
+            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_DepositApparel, armour));
         }
 
         if (restored != null)
@@ -198,7 +210,7 @@ public static class LoadoutSwapper
         Log.Message($"{LoadoutMod.LogPrefix} {pawn.LabelShort} standing down: policy -> " +
                     $"{restored?.label ?? "none"}, restoring {recovered} stashed" +
                     (lost > 0 ? $" ({lost} lost, optimiser will replace)" : "") +
-                    $", {jobs.Count} jobs, drafted={pawn.Drafted}");
+                    $", depositing {comingOff.Count}, {jobs.Count} jobs, drafted={pawn.Drafted}");
 
         StartSequence(pawn, jobs);
     }

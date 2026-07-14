@@ -22,6 +22,13 @@ public class JobDriver_LoadoutDoff : JobDriver
     /// </summary>
     private bool Remember => job.def == LoadoutJobDefOf.Loadout_StashApparel;
 
+    /// <summary>
+    /// Standing down always carries the armour, because a Loadout_DepositApparel job is queued behind
+    /// this one to put it away in storage. Gearing up carries the clothes only if the setting says so.
+    /// </summary>
+    private bool Carry =>
+        job.def == LoadoutJobDefOf.Loadout_DoffApparel || LoadoutMod.Settings.stashToInventory;
+
     public override void ExposeData()
     {
         base.ExposeData();
@@ -55,9 +62,12 @@ public class JobDriver_LoadoutDoff : JobDriver
                 return;
             }
 
-            if (Remember && CanCarry(apparel) && pawn.apparel.TryMoveToInventory(apparel))
+            if (CanCarry(apparel) && pawn.apparel.TryMoveToInventory(apparel))
             {
-                comp?.Stashed.Add(apparel);
+                if (Remember)
+                {
+                    comp?.Stashed.Add(apparel);
+                }
                 EndJobWith(JobCondition.Succeeded);
                 return;
             }
@@ -82,7 +92,7 @@ public class JobDriver_LoadoutDoff : JobDriver
 
     private bool CanCarry(Apparel apparel)
     {
-        return LoadoutMod.Settings.stashToInventory
+        return Carry
                && pawn.inventory != null
                && MassUtility.CanEverCarryAnything(pawn)
                && !MassUtility.WillBeOverEncumberedAfterPickingUp(pawn, apparel, 1);

@@ -10,7 +10,7 @@
   </JobDef>
 
   <JobDef>
-    <defName>Loadout_EquipDrop</defName>
+    <defName>Loadout_EquipDeposit</defName>
     <driverClass>Loadout.JobDriver_LoadoutEquip</driverClass>
     <reportString>changing back into TargetA.</reportString>
   </JobDef>
@@ -25,6 +25,12 @@
     <defName>Loadout_DoffApparel</defName>
     <driverClass>Loadout.JobDriver_LoadoutDoff</driverClass>
     <reportString>removing TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>Loadout_DepositApparel</defName>
+    <driverClass>Loadout.JobDriver_LoadoutDeposit</driverClass>
+    <reportString>putting TargetA away.</reportString>
   </JobDef>
 
 </Defs>

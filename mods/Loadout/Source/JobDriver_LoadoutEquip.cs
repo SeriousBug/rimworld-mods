@@ -15,8 +15,8 @@ namespace Loadout;
 /// Handles apparel lying in a stockpile, held in a shelf or outfit stand, or carried in the pawn's own
 /// inventory, which is where gear-up puts their clothes.
 ///
-/// Loadout_EquipStash keeps the displaced garments (inventory, or the floor if they will not fit).
-/// Loadout_EquipDrop leaves them for a hauler. Gearing up wants the first, standing down the second.
+/// Loadout_EquipStash remembers the displaced garments so standing down can put them back again.
+/// Loadout_EquipDeposit carries them, for a Loadout_DepositApparel job to put away in storage.
 /// </summary>
 public class JobDriver_LoadoutEquip : JobDriver
 {
@@ -31,7 +31,16 @@ public class JobDriver_LoadoutEquip : JobDriver
 
     private IApparelSource ApparelSource => (IApparelSource)job.GetTarget(TargetIndex.B).Thing;
 
-    private bool KeepDisplaced => job.def == LoadoutJobDefOf.Loadout_EquipStash;
+    /// <summary>Gearing up: the displaced garments are the pawn's own clothes, so remember them.</summary>
+    private bool RecordDisplaced => job.def == LoadoutJobDefOf.Loadout_EquipStash;
+
+    /// <summary>
+    /// Standing down always carries the displaced armour, because a Loadout_DepositApparel job is
+    /// queued behind this one to put it away in storage. Gearing up carries the clothes only if the
+    /// setting says so.
+    /// </summary>
+    private bool CarryDisplaced =>
+        job.def == LoadoutJobDefOf.Loadout_EquipDeposit || LoadoutMod.Settings.stashToInventory;
 
     public override void ExposeData()
     {
@@ -130,16 +139,19 @@ public class JobDriver_LoadoutEquip : JobDriver
                     return;
                 }
 
-                if (KeepDisplaced && CanCarry(displaced) && pawn.apparel.TryMoveToInventory(displaced))
+                if (CanCarry(displaced) && pawn.apparel.TryMoveToInventory(displaced))
                 {
-                    comp?.Stashed.Add(displaced);
+                    if (RecordDisplaced)
+                    {
+                        comp?.Stashed.Add(displaced);
+                    }
                     continue;
                 }
 
                 if (pawn.apparel.TryDrop(displaced, out var dropped, pawn.PositionHeld, forbid: false))
                 {
                     dropped?.SetForbidden(value: false, warnOnFail: false);
-                    if (KeepDisplaced && dropped != null)
+                    if (RecordDisplaced && dropped != null)
                     {
                         // Could not carry it. Still remember it, so standing down goes and fetches it.
                         comp?.Stashed.Add(dropped);
@@ -169,7 +181,7 @@ public class JobDriver_LoadoutEquip : JobDriver
 
     private bool CanCarry(Apparel apparel)
     {
-        return LoadoutMod.Settings.stashToInventory
+        return CarryDisplaced
                && pawn.inventory != null
                && MassUtility.CanEverCarryAnything(pawn)
                && !MassUtility.WillBeOverEncumberedAfterPickingUp(pawn, apparel, 1);
