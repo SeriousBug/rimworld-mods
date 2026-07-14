@@ -5,3 +5,4 @@ mods/*/Assemblies/
 .DS_Store
 Local.props
 docs/local/
+.claude/settings.local.json
