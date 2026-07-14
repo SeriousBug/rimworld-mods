@@ -5,7 +5,7 @@
   <author>Kaan Connor Barmore-Genc</author>
   <description>Pawns can carry spare weapons in their inventory and swap to them.
 
-Draft a pawn and a gizmo appears for each sidearm they carry; click it to swap. Right-click a weapon on the ground to pick it up as a sidearm.
+Select a colonist and a button appears for each sidearm they carry; click it to swap. Right-click a weapon on the ground to pick it up as a sidearm.
 
 Pawns automatically draw a melee weapon when an enemy closes to melee range, and put it away again when the fight goes back to range. Optionally they also swap to a longer-ranged weapon when the enemy is too far for the one they are holding.
 

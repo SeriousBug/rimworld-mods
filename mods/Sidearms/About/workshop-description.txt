@@ -1,0 +1,53 @@
+[h1]Connor's Sidearms![/h1]
+
+Pawns carry spare weapons in their inventory and swap to them. A sniper with a knife on their belt is not helpless when a scyther walks up to them.
+
+[h2]What it does[/h2]
+
+[list]
+[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick "Carry {weapon} as sidearm". The pawn walks over, picks it up, and keeps it in their inventory.
+[*][b]Swap by hand.[/b] Select a colonist and every sidearm they carry shows up as a button on the command bar. Click it to draw that weapon; whatever they were holding goes back into the inventory.
+[*][b]Swap automatically.[/b] When an enemy closes to melee range, a pawn holding a gun draws their best melee sidearm, and puts the gun back once the enemy is off them.
+[*][b]Raiders do it too.[/b] Enemy pawns play by the same rules, and gunners spawn with a cheap melee weapon so they fight back with a knife instead of the butt of their rifle. Both of these can be turned off.
+[/list]
+
+Sidearms live in the pawn's normal inventory. They weigh something, they show up in the gear tab, and they drop on death, same as anything else a pawn is carrying.
+
+[h2]When it auto-switches[/h2]
+
+[b]To melee (on by default).[/b] A hostile pawn coming within about 3 tiles counts as melee range. Your pawn draws the melee sidearm with the highest DPS they can use. Once no enemy is within 5 tiles, they put it away and go back to the weapon they were holding before. The gap between those two distances is deliberate: without it a pawn would flip weapons back and forth while an enemy dances along the edge of the threshold.
+
+For raiders and other non-player pawns the trigger is different, because the engine already refuses to let them fire while a melee attacker is next to them. They draw melee exactly while that block is in effect, and re-draw the gun the moment they are allowed to shoot again.
+
+[b]To longer range (off by default).[/b] Switch on "Reach for a longer-ranged weapon" in mod settings. When your pawn's target is further away than their current weapon can shoot, they swap to the [i]shortest[/i] sidearm that still reaches. Shortest, not longest, because a longer gun is usually a worse gun up close and the fight may come back to them. Melee takes priority: if an enemy is within melee range, the pawn draws melee instead.
+
+A swap costs the pawn a moment of stance delay, so there is a cooldown between automatic swaps to keep a pawn from flip-flopping. Anything you equip by hand sticks; the auto-switch will not undo a choice you made.
+
+[h2]Mod settings[/h2]
+
+[list]
+[*]Maximum sidearms per pawn (default 2)
+[*]Share of carry capacity sidearms may use (default 50%)
+[*]Draw a melee weapon in melee, and whether to put it away afterwards (both on)
+[*]Reach for a longer-ranged weapon (off)
+[*]Apply to non-player pawns (on). Turn this off to make auto-switching a player-only advantage.
+[*]Give raiders a melee sidearm (on), and the most valuable one they may spawn with (default 60 silver, so you get knives and clubs, not free longswords)
+[*]Minimum ticks between automatic swaps (default 120)
+[/list]
+
+[h2]Compatibility[/h2]
+
+Requires Harmony. Safe to add to an existing save. Removing it mid-save leaves the weapons in your pawns' inventories; drop them from the gear tab first if you want them back.
+
+Should not conflict with other mods that touch equipment, but if you find one that does, say so in the comments.
+
+[h2]Changelog[/h2]
+
+[b]1.0[/b]
+[list]
+[*]Initial release.
+[*]Carry weapons as sidearms, swap by gizmo.
+[*]Auto-draw melee in melee, auto-restore the previous weapon afterwards.
+[*]Optional auto-swap to a longer-ranged weapon.
+[*]Raiders and other faction pawns use sidearms too, and gunners spawn with a melee weapon.
+[/list]
