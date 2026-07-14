@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <Sidearms_TakeAsSidearm>Carry {0} as sidearm</Sidearms_TakeAsSidearm>
+  <Sidearms_NoRoom>no room for another sidearm</Sidearms_NoRoom>
+  <Sidearms_SwapTo_Desc>Put away the current weapon and draw the {0}.</Sidearms_SwapTo_Desc>
+  <Sidearms_Inspect>Sidearms: {0}</Sidearms_Inspect>
+
+  <Sidearms_Setting_MaxSidearms>Maximum sidearms per pawn: {0}</Sidearms_Setting_MaxSidearms>
+  <Sidearms_Setting_MassFraction>Share of carry capacity sidearms may use: {0}</Sidearms_Setting_MassFraction>
+
+  <Sidearms_Setting_AutoMelee>Draw a melee weapon in melee</Sidearms_Setting_AutoMelee>
+  <Sidearms_Setting_AutoMelee_Tip>When an enemy closes to melee range, a pawn holding a ranged weapon will switch to its best melee sidearm.</Sidearms_Setting_AutoMelee_Tip>
+
+  <Sidearms_Setting_AutoBackToRanged>Put it away afterwards</Sidearms_Setting_AutoBackToRanged>
+  <Sidearms_Setting_AutoBackToRanged_Tip>Once no enemy is close any more, the pawn goes back to the weapon it was holding before.</Sidearms_Setting_AutoBackToRanged_Tip>
+
+  <Sidearms_Setting_AutoLongerRange>Reach for a longer-ranged weapon</Sidearms_Setting_AutoLongerRange>
+  <Sidearms_Setting_AutoLongerRange_Tip>When the enemy is further away than the current weapon can shoot, the pawn switches to the shortest sidearm that still reaches.</Sidearms_Setting_AutoLongerRange_Tip>
+
+  <Sidearms_Setting_ApplyToNpcs>Apply to non-player pawns</Sidearms_Setting_ApplyToNpcs>
+  <Sidearms_Setting_ApplyToNpcs_Tip>Raiders and other factions switch weapons under the same rules. Turning this off makes the auto-switch a player-only advantage.</Sidearms_Setting_ApplyToNpcs_Tip>
+
+  <Sidearms_Setting_Cooldown>Minimum ticks between automatic swaps: {0}</Sidearms_Setting_Cooldown>
+
+</LanguageData>

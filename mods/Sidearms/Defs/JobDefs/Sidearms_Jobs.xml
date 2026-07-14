@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef>
+    <defName>Sidearms_TakeSidearm</defName>
+    <driverClass>Sidearms.JobDriver_TakeSidearm</driverClass>
+    <reportString>picking up TargetA as a sidearm.</reportString>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+  </JobDef>
+</Defs>
