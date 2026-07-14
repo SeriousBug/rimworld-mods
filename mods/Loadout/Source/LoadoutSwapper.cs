@@ -64,40 +64,41 @@ public static class LoadoutSwapper
         var previousPolicy = pawn.outfits.CurrentApparelPolicy;
         var armour = SelectArmour(pawn, policy);
 
+        // With nothing to change into, gearing up would only undress the pawn.
+        if (armour.Count == 0)
+        {
+            Messages.Message("Loadout_NoGearMessage".Translate(pawn.LabelShort, policy.label, pawn),
+                pawn, MessageTypeDefOf.RejectInput, historical: false);
+            return;
+        }
+
         var jobs = new List<Job>();
         comp.Stashed.Clear();
 
-        // Take off anything the combat policy disallows, or that would block a piece we are about to
-        // put on. Forced and locked apparel is skipped, so it survives the swap untouched.
-        foreach (var worn in pawn.apparel.WornApparel.ToList())
-        {
-            if (IsUntouchable(pawn, worn))
-            {
-                continue;
-            }
-
-            var displacedByArmour = armour.Any(a =>
-                !ApparelUtility.CanWearTogether(a.def, worn.def, pawn.RaceProps.body));
-
-            if (policy.filter.Allows(worn) && !displacedByArmour)
-            {
-                continue;
-            }
-
-            var stashJob = JobMaker.MakeJob(
-                LoadoutMod.Settings.stashToInventory
-                    ? LoadoutJobDefOf.Loadout_StashApparel
-                    : LoadoutJobDefOf.Loadout_DoffApparel,
-                worn);
-            jobs.Add(stashJob);
-            comp.Stashed.Add(worn);
-        }
-
-        // Vanilla's Wear job handles pathing, reservations and pulling apparel out of haul sources
-        // such as shelves and outfit stands.
+        // Each swap is one job, so the pawn walks over dressed and changes at the stockpile. The job
+        // itself takes off whatever the new piece displaces and remembers it.
         foreach (var piece in armour)
         {
-            jobs.Add(JobMaker.MakeJob(JobDefOf.Wear, piece));
+            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_EquipStash, piece));
+        }
+
+        // Whatever the policy disallows but no armour piece displaces (a hat, with no helmet to swap
+        // into) comes off afterwards, so the pawn is never undressed while travelling.
+        foreach (var worn in pawn.apparel.WornApparel.ToList())
+        {
+            if (IsUntouchable(pawn, worn) || policy.filter.Allows(worn))
+            {
+                continue;
+            }
+
+            var handledBySwap = armour.Any(a =>
+                !ApparelUtility.CanWearTogether(a.def, worn.def, pawn.RaceProps.body));
+            if (handledBySwap)
+            {
+                continue;
+            }
+
+            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_StashApparel, worn));
         }
 
         // Setting the policy fires Notify_OutfitChanged, which resets nextApparelOptimizeTick, so an
@@ -126,27 +127,10 @@ public static class LoadoutSwapper
 
         var jobs = new List<Job>();
 
-        // Take the armour off first so the pawn pays the equip delay, rather than letting Wear()
-        // silently dump it on the floor the instant the old clothes go on.
-        foreach (var worn in pawn.apparel.WornApparel.ToList())
-        {
-            if (IsUntouchable(pawn, worn) || stashed.Contains(worn))
-            {
-                continue;
-            }
-
-            var displacedByStashed = stashed.Any(a =>
-                !ApparelUtility.CanWearTogether(a.def, worn.def, pawn.RaceProps.body));
-
-            var allowedByRestoredPolicy = restored != null && restored.filter.Allows(worn);
-            if (allowedByRestoredPolicy && !displacedByStashed)
-            {
-                continue;
-            }
-
-            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_DoffApparel, worn));
-        }
-
+        // Swapping back is the same one-job-per-piece swap, so the armour comes off exactly when the
+        // old clothes go on. A garment carried in the inventory needs no trip; one left on the floor
+        // is walked to in armour, not in underwear.
+        var restorable = new List<Apparel>();
         foreach (var apparel in stashed)
         {
             if (pawn.apparel.WornApparel.Contains(apparel))
@@ -154,18 +138,52 @@ public static class LoadoutSwapper
                 continue;
             }
 
-            // Anything stashed on the floor rather than in the inventory is picked up with the vanilla
-            // Wear job; anything still carried uses ours. Anything lost is simply skipped, and the
-            // restored policy lets the vanilla optimiser find a replacement.
-            if (pawn.inventory != null && pawn.inventory.innerContainer.Contains(apparel))
+            // Do not plan a piece that could only go on by removing gear the player forced since.
+            var blockedByUntouchable = pawn.apparel.WornApparel.Any(worn =>
+                IsUntouchable(pawn, worn)
+                && !ApparelUtility.CanWearTogether(worn.def, apparel.def, pawn.RaceProps.body));
+            if (blockedByUntouchable)
             {
-                jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_WearFromInventory, apparel));
+                continue;
             }
-            else if (apparel.Spawned && apparel.Map == pawn.Map && pawn.CanReserveAndReach(
-                         apparel, PathEndMode.ClosestTouch, Danger.Deadly))
+
+            var carried = pawn.inventory != null && pawn.inventory.innerContainer.Contains(apparel);
+            var onMap = apparel.Spawned
+                        && apparel.Map == pawn.Map
+                        && pawn.CanReserveAndReach(apparel, PathEndMode.ClosestTouch, pawn.NormalMaxDanger());
+
+            if (!carried && !onMap)
             {
-                jobs.Add(JobMaker.MakeJob(JobDefOf.Wear, apparel));
+                // Burnt, stolen, or worn by someone else. Skipped: the restored policy lets the vanilla
+                // optimiser find a replacement.
+                continue;
             }
+
+            restorable.Add(apparel);
+            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_EquipDrop, apparel));
+        }
+
+        // Armour the restored policy disallows but no restored garment displaces comes off afterwards.
+        foreach (var worn in pawn.apparel.WornApparel.ToList())
+        {
+            if (IsUntouchable(pawn, worn) || stashed.Contains(worn))
+            {
+                continue;
+            }
+
+            if (restored != null && restored.filter.Allows(worn))
+            {
+                continue;
+            }
+
+            var handledBySwap = restorable.Any(a =>
+                !ApparelUtility.CanWearTogether(a.def, worn.def, pawn.RaceProps.body));
+            if (handledBySwap)
+            {
+                continue;
+            }
+
+            jobs.Add(JobMaker.MakeJob(LoadoutJobDefOf.Loadout_DoffApparel, worn));
         }
 
         if (restored != null)
@@ -173,7 +191,7 @@ public static class LoadoutSwapper
             pawn.outfits.CurrentApparelPolicy = restored;
         }
 
-        var recovered = stashed.Count;
+        var recovered = restorable.Count;
         var lost = comp.Stashed.Count - recovered;
         comp.MarkStoodDown();
 

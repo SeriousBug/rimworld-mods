@@ -10,6 +10,7 @@
   <Loadout_UsePolicy>Combat policy: {0}</Loadout_UsePolicy>
   <Loadout_NoPolicy>none</Loadout_NoPolicy>
   <Loadout_NoPolicyMessage>{0} has no combat policy set. Right-click the gear up button to choose one.</Loadout_NoPolicyMessage>
+  <Loadout_NoGearMessage>{0} has no gear to change into: nothing in storage is allowed by the {1} policy. Gearing up would only undress them.</Loadout_NoGearMessage>
 
   <Loadout_Setting_StashToInventory>Stash clothes in the pawn's inventory</Loadout_Setting_StashToInventory>
   <Loadout_Setting_StashToInventoryDesc>Clothes taken off to gear up are carried by the pawn, so the swap back cannot fail because someone hauled them away. The pawn carries their weight. If they cannot carry it, the clothes drop on the floor instead.\n\nTurn this off to drop clothes on the floor for a hauler to store, which is what the vanilla apparel optimiser does.</Loadout_Setting_StashToInventoryDesc>

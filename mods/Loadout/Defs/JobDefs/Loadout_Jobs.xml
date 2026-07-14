@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
+  <!-- Swapping into a garment and out of whatever it displaces is one job, so the pawn travels
+       dressed and changes at the destination rather than walking there naked. -->
+  <JobDef>
+    <defName>Loadout_EquipStash</defName>
+    <driverClass>Loadout.JobDriver_LoadoutEquip</driverClass>
+    <reportString>changing into TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>Loadout_EquipDrop</defName>
+    <driverClass>Loadout.JobDriver_LoadoutEquip</driverClass>
+    <reportString>changing back into TargetA.</reportString>
+  </JobDef>
+
   <JobDef>
     <defName>Loadout_StashApparel</defName>
     <driverClass>Loadout.JobDriver_LoadoutDoff</driverClass>
@@ -11,12 +25,6 @@
     <defName>Loadout_DoffApparel</defName>
     <driverClass>Loadout.JobDriver_LoadoutDoff</driverClass>
     <reportString>removing TargetA.</reportString>
-  </JobDef>
-
-  <JobDef>
-    <defName>Loadout_WearFromInventory</defName>
-    <driverClass>Loadout.JobDriver_LoadoutWearFromInventory</driverClass>
-    <reportString>putting TargetA back on.</reportString>
   </JobDef>
 
 </Defs>
