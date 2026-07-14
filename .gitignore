@@ -4,3 +4,4 @@ mods/*/Assemblies/
 *.user
 .DS_Store
 Local.props
+docs/local/

@@ -1,7 +1,11 @@
 # RimWorld modding monorepo
 
-One repo, many mods. Each folder under `mods/` is self-contained. See `README.md` for the build and
-sync loop, and `docs/verified-facts.md` for API facts checked against the decompiled source.
+One repo, many mods. Each folder under `mods/` is self-contained. See `docs/development.md` for the
+build and sync loop, and `docs/local/verified-facts.md` for API facts checked against the decompiled
+source. `docs/local/` is not committed.
+
+Folder names under `mods/` are the short names (`Sidearms`, `Loadout`); the player-facing names in
+`About.xml` are "Connor's Sidearms!" and "Connor's Loadouts!". Commit tags use the folder name.
 
 ## Commit messages
 
