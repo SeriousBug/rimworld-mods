@@ -45,10 +45,14 @@ public class JobDriver_TakeSidearm : JobDriver
                 return;
             }
 
-            var toTake = weapon.stackCount > 1 ? (ThingWithComps)weapon.SplitOff(1) : weapon;
+            // A weapon lying on the map belongs to Map.spawnedThings, and ThingOwner.TryAdd refuses
+            // anything that is already in a container. SplitOff is what despawns it and hands over
+            // ownership, even when it is taking the whole stack.
+            var toTake = (ThingWithComps)weapon.SplitOff(1);
 
             if (!pawn.inventory.innerContainer.TryAdd(toTake))
             {
+                GenPlace.TryPlaceThing(toTake, pawn.Position, pawn.Map, ThingPlaceMode.Near);
                 EndJobWith(JobCondition.Incompletable);
                 return;
             }
