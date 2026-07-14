@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LanguageData>
-
-  <!-- Overrides the label in the Def. Seeing the injected text proves DefInjected resolved. -->
-  <BootstrapCheck_Test.label>bootstrap check (label injected)</BootstrapCheck_Test.label>
-
-</LanguageData>

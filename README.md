@@ -55,10 +55,6 @@ The build finds your game install and compiles the mod's DLL into `mods/<ModName
 `sync-mod.sh` copies the whole mod folder into RimWorld's `Mods/` directory. Launch the game, enable the
 mod, and it is live. `sync-mod.sh <ModName> --watch` re-syncs whenever a file changes.
 
-`mods/BootstrapCheck` is not a real mod. It is a test that loads Defs, patches, translations and a
-Harmony assembly, and writes a pass or fail line for each to the game log, so you can tell a broken
-toolchain apart from a broken mod.
-
 The repository layout:
 
 ```

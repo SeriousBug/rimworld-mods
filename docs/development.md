@@ -72,9 +72,3 @@ Defs and Textures are in `<app>/Data`. Guides pointing at
 RimWorld log is `~/Library/Logs/Ludeon Studios/RimWorld by Ludeon Studios/Player.log`.
 
 Scripts use BSD tools: `sed -i '' 's/…/…/' file` (the `''` is mandatory).
-
-## mods/BootstrapCheck
-
-A test mod that exercises Defs, Patches, DefInjected and a Harmony-patched assembly, and
-reports each one to `Player.log` with a `[BootstrapCheck] PASS`/`FAIL` line. Use it to confirm
-the toolchain works before blaming your own mod.
