@@ -21,6 +21,10 @@ public static class AutoSwitch
     // enemy dances along the edge of the threshold.
     private const float MeleeClearRadius = 5f;
 
+    // An NPC re-draws its gun the moment the engine will let it fire again, so the only hysteresis
+    // it needs is enough to survive an attacker stepping out and straight back in.
+    private const float NpcMeleeClearRadius = 2.9f;
+
     public static void Evaluate(CompSidearms comp)
     {
         var pawn = comp.Pawn;
@@ -45,6 +49,7 @@ public static class AutoSwitch
     {
         if (pawn.Drafted) return true;
         if (pawn.mindState?.enemyTarget != null) return true;
+        if (pawn.mindState?.meleeThreat != null) return true;
 
         var job = pawn.CurJobDef;
         return job == JobDefOf.AttackMelee
@@ -56,8 +61,9 @@ public static class AutoSwitch
     {
         var primary = pawn.equipment.Primary;
         var holdingMelee = primary != null && primary.def.IsMeleeWeapon;
+        var npc = !pawn.Faction.IsPlayerSafe();
 
-        if (HostileWithin(pawn, MeleeThreatRadius))
+        if (npc ? GunBlockedByMelee(comp, pawn) : HostileWithin(pawn, MeleeThreatRadius))
         {
             if (holdingMelee) return false;
             if (!comp.CanSwapNow) return false;
@@ -71,9 +77,36 @@ public static class AutoSwitch
 
         if (!SidearmsMod.Settings.autoSwitchBackToRanged) return false;
         if (!holdingMelee) return false;
-        if (HostileWithin(pawn, MeleeClearRadius)) return false;
+        if (HostileWithin(pawn, npc ? NpcMeleeClearRadius : MeleeClearRadius)) return false;
 
         return TryRestorePreferred(comp, pawn);
+    }
+
+    /// <summary>
+    /// Whether the engine is currently refusing to let this pawn shoot: Verb_LaunchProjectile
+    /// .Available() returns false for a non-player pawn whose melee threat is standing next to it.
+    /// While that holds, the gun in its hands is dead weight and a melee weapon costs it nothing.
+    ///
+    /// The condition also decides when the gun goes back. A pawn left holding a melee weapon after
+    /// the block lifts is routed down JobGiver_AIFightEnemy's melee branch and chases its target
+    /// across the map instead of shooting it.
+    /// </summary>
+    private static bool GunBlockedByMelee(CompSidearms comp, Pawn pawn)
+    {
+        var mindState = pawn.mindState;
+        var threat = mindState?.meleeThreat;
+        if (threat == null) return false;
+
+        // Once the pawn has swapped, the gun the block applies to is the one it means to go back to.
+        var gun = comp.PreferredPrimary ?? pawn.equipment.Primary;
+        if (gun != null && !gun.def.IsMeleeWeapon && !NpcSidearmGenerator.BlockedInMelee(gun.def))
+        {
+            return false;
+        }
+
+        if (!mindState.MeleeThreatStillThreat) return false;
+
+        return threat.Position.AdjacentTo8WayOrInside(pawn.Position);
     }
 
     private static bool TryHandleRange(CompSidearms comp, Pawn pawn)

@@ -14,6 +14,12 @@ public class SidearmsSettings : ModSettings
 
     public bool applyToNonPlayerPawns = true;
 
+    public bool giveNpcMeleeSidearms = true;
+
+    // Silver. Enough for a knife, a club or a spear; not enough for every raider corpse to drop a
+    // longsword the player would not otherwise have seen.
+    public float npcSidearmMaxPrice = 60f;
+
     // A swap costs the pawn a stance delay, so a pawn that flip-flops every check is worse off
     // than one that never swaps at all. This floor is what keeps that from happening.
     public int swapCooldownTicks = 120;
@@ -27,6 +33,8 @@ public class SidearmsSettings : ModSettings
         Scribe_Values.Look(ref autoSwitchBackToRanged, "autoSwitchBackToRanged", defaultValue: true);
         Scribe_Values.Look(ref autoSwitchToLongerRange, "autoSwitchToLongerRange", defaultValue: false);
         Scribe_Values.Look(ref applyToNonPlayerPawns, "applyToNonPlayerPawns", defaultValue: true);
+        Scribe_Values.Look(ref giveNpcMeleeSidearms, "giveNpcMeleeSidearms", defaultValue: true);
+        Scribe_Values.Look(ref npcSidearmMaxPrice, "npcSidearmMaxPrice", 60f);
         Scribe_Values.Look(ref swapCooldownTicks, "swapCooldownTicks", 120);
     }
 
@@ -59,6 +67,15 @@ public class SidearmsSettings : ModSettings
 
         list.CheckboxLabeled("Sidearms_Setting_ApplyToNpcs".Translate(), ref applyToNonPlayerPawns,
             "Sidearms_Setting_ApplyToNpcs_Tip".Translate());
+
+        list.CheckboxLabeled("Sidearms_Setting_NpcMelee".Translate(), ref giveNpcMeleeSidearms,
+            "Sidearms_Setting_NpcMelee_Tip".Translate());
+
+        if (giveNpcMeleeSidearms)
+        {
+            list.Label("Sidearms_Setting_NpcMeleePrice".Translate(npcSidearmMaxPrice.ToString("F0")));
+            npcSidearmMaxPrice = Mathf.Round(list.Slider(npcSidearmMaxPrice, 10f, 300f));
+        }
 
         list.Label("Sidearms_Setting_Cooldown".Translate(swapCooldownTicks));
         swapCooldownTicks = Mathf.RoundToInt(list.Slider(swapCooldownTicks, 30f, 600f));

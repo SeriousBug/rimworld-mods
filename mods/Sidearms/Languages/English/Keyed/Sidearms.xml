@@ -21,6 +21,11 @@
   <Sidearms_Setting_ApplyToNpcs>Apply to non-player pawns</Sidearms_Setting_ApplyToNpcs>
   <Sidearms_Setting_ApplyToNpcs_Tip>Raiders and other factions switch weapons under the same rules. Turning this off makes the auto-switch a player-only advantage.</Sidearms_Setting_ApplyToNpcs_Tip>
 
+  <Sidearms_Setting_NpcMelee>Give raiders a melee sidearm</Sidearms_Setting_NpcMelee>
+  <Sidearms_Setting_NpcMelee_Tip>Pawns of other factions who spawn with a gun also carry a melee weapon. A non-player pawn cannot fire while an enemy who has hit it is standing next to it, so without this it fights back with the butt of its gun.</Sidearms_Setting_NpcMelee_Tip>
+
+  <Sidearms_Setting_NpcMeleePrice>Most valuable melee sidearm they may spawn with: {0} silver</Sidearms_Setting_NpcMeleePrice>
+
   <Sidearms_Setting_Cooldown>Minimum ticks between automatic swaps: {0}</Sidearms_Setting_Cooldown>
 
 </LanguageData>
