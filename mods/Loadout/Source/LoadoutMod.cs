@@ -27,11 +27,11 @@ public class LoadoutMod : Mod
     public LoadoutMod(ModContentPack content) : base(content)
     {
         Settings = GetSettings<LoadoutSettings>();
-        new Harmony("kaan.loadout").PatchAll(Assembly.GetExecutingAssembly());
+        new Harmony("connor.loadouts").PatchAll(Assembly.GetExecutingAssembly());
         Log.Message($"{LogPrefix} assembly loaded and Harmony patches applied.");
     }
 
-    public override string SettingsCategory() => "Loadout";
+    public override string SettingsCategory() => "Connor's Loadouts!";
 
     public override void DoSettingsWindowContents(Rect inRect)
     {

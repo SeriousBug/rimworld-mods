@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <packageId>kaan.loadout</packageId>
-  <name>Loadout</name>
-  <author>kaan</author>
+  <packageId>connor.loadouts</packageId>
+  <name>Connor's Loadouts!</name>
+  <author>Kaan Connor Barmore-Genc</author>
   <description>Swap a pawn into combat gear with one button, then swap them back to the clothes they were wearing before.
 
 Select colonists and press "Gear up". They interrupt what they are doing, stash their current clothes, and put on the best armour their combat policy allows. Press "Stand down" and they put their old clothes back on.
