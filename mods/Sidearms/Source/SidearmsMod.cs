@@ -14,11 +14,11 @@ public class SidearmsMod : Mod
     public SidearmsMod(ModContentPack content) : base(content)
     {
         Settings = GetSettings<SidearmsSettings>();
-        new Harmony("kaan.sidearms").PatchAll(Assembly.GetExecutingAssembly());
+        new Harmony("connor.sidearms").PatchAll(Assembly.GetExecutingAssembly());
         Log.Message($"{LogPrefix} loaded.");
     }
 
-    public override string SettingsCategory() => "Sidearms";
+    public override string SettingsCategory() => "Connor's Sidearms!";
 
     public override void DoSettingsWindowContents(Rect inRect) => Settings.DoWindowContents(inRect);
 }

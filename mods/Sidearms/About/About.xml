@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <packageId>kaan.sidearms</packageId>
-  <name>Sidearms</name>
-  <author>kaan</author>
+  <packageId>connor.sidearms</packageId>
+  <name>Connor's Sidearms!</name>
+  <author>Kaan Connor Barmore-Genc</author>
   <description>Pawns can carry spare weapons in their inventory and swap to them.
 
 Draft a pawn and a gizmo appears for each sidearm they carry; click it to swap. Right-click a weapon on the ground to pick it up as a sidearm.
