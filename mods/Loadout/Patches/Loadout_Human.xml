@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+  <!-- Human already carries a <comps> list (Races_Humanlike.xml), so a plain add is enough. The comp
+       lands on every Human including raiders and prisoners; CompLoadout gates its gizmo on the pawn
+       actually being a player colonist. -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>/Defs/ThingDef[defName="Human"]/comps</xpath>
+    <value>
+      <li Class="Loadout.CompProperties_Loadout" />
+    </value>
+  </Operation>
+
+</Patch>

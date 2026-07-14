@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <Loadout_GearUp>Gear up</Loadout_GearUp>
+  <Loadout_GearUpDesc>Stop what this pawn is doing, stash the clothes they are wearing, and put on the best gear their combat policy ({0}) allows.\n\nForced apparel is left alone.\n\nRight-click to choose the combat policy.</Loadout_GearUpDesc>
+
+  <Loadout_StandDown>Stand down</Loadout_StandDown>
+  <Loadout_StandDownDesc>Take the combat gear off and put back on the clothes this pawn was wearing before they geared up.\n\nRight-click to choose the combat policy.</Loadout_StandDownDesc>
+
+  <Loadout_UsePolicy>Combat policy: {0}</Loadout_UsePolicy>
+  <Loadout_NoPolicy>none</Loadout_NoPolicy>
+  <Loadout_NoPolicyMessage>{0} has no combat policy set. Right-click the gear up button to choose one.</Loadout_NoPolicyMessage>
+
+  <Loadout_Setting_StashToInventory>Stash clothes in the pawn's inventory</Loadout_Setting_StashToInventory>
+  <Loadout_Setting_StashToInventoryDesc>Clothes taken off to gear up are carried by the pawn, so the swap back cannot fail because someone hauled them away. The pawn carries their weight. If they cannot carry it, the clothes drop on the floor instead.\n\nTurn this off to drop clothes on the floor for a hauler to store, which is what the vanilla apparel optimiser does.</Loadout_Setting_StashToInventoryDesc>
+
+  <Loadout_Setting_StandDownOnUndraft>Stand down when undrafted</Loadout_Setting_StandDownOnUndraft>
+  <Loadout_Setting_StandDownOnUndraftDesc>Undrafting a geared-up pawn puts their old clothes back on automatically. Drafting never gears a pawn up; use the button for that.</Loadout_Setting_StandDownOnUndraftDesc>
+
+</LanguageData>

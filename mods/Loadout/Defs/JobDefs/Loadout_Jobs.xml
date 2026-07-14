@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <JobDef>
+    <defName>Loadout_StashApparel</defName>
+    <driverClass>Loadout.JobDriver_LoadoutDoff</driverClass>
+    <reportString>stashing TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>Loadout_DoffApparel</defName>
+    <driverClass>Loadout.JobDriver_LoadoutDoff</driverClass>
+    <reportString>removing TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>Loadout_WearFromInventory</defName>
+    <driverClass>Loadout.JobDriver_LoadoutWearFromInventory</driverClass>
+    <reportString>putting TargetA back on.</reportString>
+  </JobDef>
+
+</Defs>
