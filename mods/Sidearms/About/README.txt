@@ -44,14 +44,3 @@ Should not conflict with other mods that touch equipment, but if you find one th
 [h2]Source[/h2]
 
 Open source, MIT licensed. The code lives at [url=https://github.com/SeriousBug/rimworld-mods]github.com/SeriousBug/rimworld-mods[/url], along with my other RimWorld mods. Bug reports and pull requests are welcome; if you are reporting a bug, attach your Player.log.
-
-[h2]Changelog[/h2]
-
-[b]1.0[/b]
-[list]
-[*]Initial release.
-[*]Carry weapons as sidearms, swap by gizmo.
-[*]Auto-draw melee in melee, auto-restore the previous weapon afterwards.
-[*]Optional auto-swap to a longer-ranged weapon.
-[*]Raiders and other faction pawns use sidearms too, and gunners spawn with a melee weapon.
-[/list]
