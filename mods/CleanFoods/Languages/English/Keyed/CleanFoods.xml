@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CleanFoods_Setting_CleanThreshold>Clean threshold: {0} cleanliness</CleanFoods_Setting_CleanThreshold>
+  <CleanFoods_Setting_CleanThresholdDesc>At or above this room cleanliness, cooked meals have zero poison risk. Vanilla default is -2. A normal kitchen on plain flooring sits at 0.</CleanFoods_Setting_CleanThresholdDesc>
+
+  <CleanFoods_Setting_FilthyFloor>Filthy floor: {0} cleanliness</CleanFoods_Setting_FilthyFloor>
+  <CleanFoods_Setting_FilthyFloorDesc>At or below this room cleanliness, poison risk is at its maximum. Between the filthy floor and the clean threshold, risk scales linearly. Vanilla default is -5.</CleanFoods_Setting_FilthyFloorDesc>
+
+  <CleanFoods_Setting_MaxChance>Max poison chance: {0}%</CleanFoods_Setting_MaxChance>
+  <CleanFoods_Setting_MaxChanceDesc>Poison chance per meal in the filthiest kitchen (at or below the filthy floor). Vanilla default is 5%.</CleanFoods_Setting_MaxChanceDesc>
+
+  <CleanFoods_Setting_Reset>Reset to vanilla-equivalent defaults</CleanFoods_Setting_Reset>
+</LanguageData>

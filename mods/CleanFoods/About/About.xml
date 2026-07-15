@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>connor.cleanfoods</packageId>
+  <name>Connor's Clean Foods!</name>
+  <author>Kaan Connor Barmore-Genc</author>
+  <description>Food poisoning comes from a filthy kitchen, not an unskilled cook.
+
+Vanilla rolls two poisoning checks when a meal is cooked: one for the kitchen's cleanliness, and one for the cook's Cooking skill. This mod removes the cook-skill check entirely. A low-skill cook in a clean kitchen never poisons anyone, and even a master cook can't make a clean meal next to a pile of rotting bodies.
+
+Poison risk is driven only by the cooking room's cleanliness, on a tunable curve (mod settings):
+- At or above the clean threshold (default -2 cleanliness), risk is zero.
+- Below it, risk scales with filth up to a maximum (default 5%) at the filthy floor (default -5).
+
+Raw meat, rotten food, and insect meat keep their own separate poisoning. This mod only changes poisoning from cooked meals.
+
+Makes kitchen cleanliness a real system and lets low-skill colonists cook without poisoning the colony.</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+</ModMetaData>
