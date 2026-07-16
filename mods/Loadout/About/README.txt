@@ -1,6 +1,6 @@
 [h1]Connor's Loadouts![/h1]
 
-Swap a colonist into their combat gear with one button, and back out of it with another. No more dragging armour onto pawns piece by piece every time a raid shows up.
+Swap a colonist into their combat gear with one button, and back out of it with another. No more manually reassigning outfit policies and force wearing armor every time a raid shows up.
 
 [h2]What it does[/h2]
 
