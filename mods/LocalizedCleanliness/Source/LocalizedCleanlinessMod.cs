@@ -62,9 +62,16 @@ public class LocalizedCleanlinessMod : Mod
 
         if (s.localCleanliness)
         {
+            var fullWidth = list.ColumnWidth;
+            list.Indent();
+            list.ColumnWidth = fullWidth - 12f;
+
             list.CheckboxLabeled("LC_Setting_ForCooking".Translate(), ref s.localForCooking);
             list.CheckboxLabeled("LC_Setting_ForSurgery".Translate(), ref s.localForSurgery);
             list.CheckboxLabeled("LC_Setting_ForTending".Translate(), ref s.localForTending);
+
+            list.ColumnWidth = fullWidth;
+            list.Outdent();
 
             list.Gap();
             list.Label("LC_Setting_Radius".Translate(s.radius.ToString("0.0")),
@@ -74,7 +81,7 @@ public class LocalizedCleanlinessMod : Mod
             list.Gap();
             list.Label("LC_Setting_Falloff".Translate(s.falloffPower.ToString("0.0")),
                 tooltip: "LC_Setting_FalloffDesc".Translate());
-            s.falloffPower = list.Slider(s.falloffPower, 0.2f, 4f);
+            s.falloffPower = list.Slider(s.falloffPower, 0f, 4f);
         }
 
         list.Gap();

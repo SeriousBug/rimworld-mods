@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CleanFoods_Setting_CleanThreshold>Clean threshold: {0} cleanliness</CleanFoods_Setting_CleanThreshold>
-  <CleanFoods_Setting_CleanThresholdDesc>At or above this room cleanliness, cooked meals have zero poison risk. Vanilla default is -2. A normal kitchen on plain flooring sits at 0.</CleanFoods_Setting_CleanThresholdDesc>
+  <LC_Setting_RemoveCookSkill>Remove cook skill from food poisoning</LC_Setting_RemoveCookSkill>
+  <LC_Setting_RemoveCookSkillDesc>Vanilla rolls food poisoning against the cook's Cooking skill in addition to kitchen cleanliness, so a low-skill cook poisons meals even in a spotless kitchen. With this on, cook skill no longer causes poisoning; only cleanliness does.</LC_Setting_RemoveCookSkillDesc>
 
-  <CleanFoods_Setting_FilthyFloor>Filthy floor: {0} cleanliness</CleanFoods_Setting_FilthyFloor>
-  <CleanFoods_Setting_FilthyFloorDesc>At or below this room cleanliness, poison risk is at its maximum. Between the filthy floor and the clean threshold, risk scales linearly. Vanilla default is -5.</CleanFoods_Setting_FilthyFloorDesc>
+  <LC_Setting_LocalCleanliness>Use nearby cleanliness instead of whole-room average</LC_Setting_LocalCleanliness>
+  <LC_Setting_LocalCleanlinessDesc>Measure cleanliness locally around the spot where the work happens (the stove or the bed), weighting nearby tiles most and ignoring tiles beyond the radius or behind a wall, instead of the flat average over the whole room. Reuses vanilla cleanliness values and curves.</LC_Setting_LocalCleanlinessDesc>
 
-  <CleanFoods_Setting_MaxChance>Max poison chance: {0}%</CleanFoods_Setting_MaxChance>
-  <CleanFoods_Setting_MaxChanceDesc>Poison chance per meal in the filthiest kitchen (at or below the filthy floor). Vanilla default is 5%.</CleanFoods_Setting_MaxChanceDesc>
+  <LC_Setting_ForCooking>Apply to cooking (food poisoning)</LC_Setting_ForCooking>
+  <LC_Setting_ForSurgery>Apply to surgery success chance</LC_Setting_ForSurgery>
+  <LC_Setting_ForTending>Apply to post-tend infection chance</LC_Setting_ForTending>
 
-  <CleanFoods_Setting_Reset>Reset to vanilla-equivalent defaults</CleanFoods_Setting_Reset>
+  <LC_Setting_Radius>Radius: {0} tiles</LC_Setting_Radius>
+  <LC_Setting_RadiusDesc>How far from the work spot cleanliness is sampled. Smaller means only the tiles right next to the stove or bed matter.</LC_Setting_RadiusDesc>
+
+  <LC_Setting_Falloff>Falloff strength: {0}</LC_Setting_Falloff>
+  <LC_Setting_FalloffDesc>How sharply nearer tiles outweigh farther ones. 1 is a straight linear falloff to the radius edge; higher values concentrate the weight on the tiles closest to the work spot.</LC_Setting_FalloffDesc>
+
+  <LC_Setting_Reset>Reset to defaults</LC_Setting_Reset>
+
+  <LC_RoomInfectionChanceFactorLocal>Infection chance multiplier from surroundings</LC_RoomInfectionChanceFactorLocal>
 </LanguageData>

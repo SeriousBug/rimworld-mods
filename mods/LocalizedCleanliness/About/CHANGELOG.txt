@@ -1,0 +1,9 @@
+[b]1.0[/b]
+[list]
+[*]Initial release.
+[*]Measure cleanliness locally around the work spot instead of averaging over the whole room, so room size stops mattering and it works outdoors.
+[*]Applies to cooking food poisoning, surgery success chance, and post-tend infection chance, each toggleable.
+[*]Surgery-success breakdown and the medical bed's infection line report the localized figure.
+[*]Configurable sample radius and falloff strength.
+[*]Optional removal of the cook-skill roll from food poisoning, so only cleanliness poisons meals.
+[/list]
