@@ -3,15 +3,11 @@
   <packageId>connor.localizedcleanliness</packageId>
   <name>Connor's Localized Cleanliness!</name>
   <author>Kaan Connor Barmore-Genc</author>
-  <description>Food poisoning, surgery success, and post-tend infection depend on how clean the tiles are right where the work happens, not the average tidiness of the whole room.
+  <description>Food poisoning from cooking, surgery success, and post-tend infection depend on the cleanliness of the immediate area around where the work happens, not the average over the whole room.
 
-Vanilla scales all three by the room's overall cleanliness, averaged flat over every tile. A big room dilutes its filth, so a huge dirty kitchen can read cleaner than a small tidy one, and flooring an entire hall in sterile tile counts the same as flooring the few tiles that matter. This mod measures cleanliness locally around the stove or the operating bed instead. Nearby tiles count most, distant tiles count less, and tiles past a short radius or behind a wall do not count at all.
+This fixes two problems with vanilla. Vanilla averages cleanliness over the entire room, so small rooms are penalized while large ones shrug off dirt, and outdoors it does not measure cleanliness at all. Because this mod checks only the surrounding area, room size stops mattering and the calculation works outdoors too.
 
-The vanilla cleanliness values and curves are reused unchanged, so this is a rebalance, not a difficulty cut. Room size stops mattering on its own: keep the tiles around the stove or the bed clean and you are fine, let them get bloody or filthy and you are not. Outdoor cooking is handled properly too, sampling the actual ground around the campfire instead of falling back to a flat chance.
-
-Optionally, cook skill can be dropped as a food-poisoning factor, so foodborne illness comes from hygiene rather than incompetence. This is off by default; turn it on in mod settings, along with radius, falloff, and per-system toggles.
-
-Requires Harmony. Raw meat, rotten food, and insect meat keep their own separate poisoning, which this mod does not touch.</description>
+Radius, falloff, and per-system toggles are in mod settings. Requires Harmony.</description>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
