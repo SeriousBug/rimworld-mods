@@ -3,93 +3,90 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 
-namespace CleanFoods;
+namespace LocalizedCleanliness;
 
-public class CleanFoodsSettings : ModSettings
+public class LocalizedCleanlinessSettings : ModSettings
 {
-    public float cleanThreshold = -2f;
-    public float filthyFloor = -5f;
-    public float maxChance = 0.05f;
+    public bool removeCookSkill = false;
+
+    public bool localCleanliness = true;
+    public bool localForCooking = true;
+    public bool localForSurgery = true;
+    public bool localForTending = true;
+
+    public float radius = 4f;
+    public float falloffPower = 1f;
+
+    public bool LocalActiveFor(bool areaToggle) => localCleanliness && areaToggle;
 
     public override void ExposeData()
     {
         base.ExposeData();
-        Scribe_Values.Look(ref cleanThreshold, "cleanThreshold", -2f);
-        Scribe_Values.Look(ref filthyFloor, "filthyFloor", -5f);
-        Scribe_Values.Look(ref maxChance, "maxChance", 0.05f);
+        Scribe_Values.Look(ref removeCookSkill, "removeCookSkill", defaultValue: false);
+        Scribe_Values.Look(ref localCleanliness, "localCleanliness", defaultValue: true);
+        Scribe_Values.Look(ref localForCooking, "localForCooking", defaultValue: true);
+        Scribe_Values.Look(ref localForSurgery, "localForSurgery", defaultValue: true);
+        Scribe_Values.Look(ref localForTending, "localForTending", defaultValue: true);
+        Scribe_Values.Look(ref radius, "radius", 4f);
+        Scribe_Values.Look(ref falloffPower, "falloffPower", 1f);
     }
 }
 
-public class CleanFoodsMod : Mod
+public class LocalizedCleanlinessMod : Mod
 {
-    public const string LogPrefix = "[CleanFoods]";
+    public const string LogPrefix = "[LocalizedCleanliness]";
 
-    public static CleanFoodsSettings Settings { get; private set; }
+    public static LocalizedCleanlinessSettings Settings { get; private set; }
 
-    public CleanFoodsMod(ModContentPack content) : base(content)
+    public LocalizedCleanlinessMod(ModContentPack content) : base(content)
     {
-        Settings = GetSettings<CleanFoodsSettings>();
-        new Harmony("connor.cleanfoods").PatchAll(Assembly.GetExecutingAssembly());
+        Settings = GetSettings<LocalizedCleanlinessSettings>();
+        new Harmony("connor.localizedcleanliness").PatchAll(Assembly.GetExecutingAssembly());
         Log.Message($"{LogPrefix} assembly loaded and Harmony patches applied.");
     }
 
-    /// <summary>
-    /// Poison chance for a cooking room at the given cleanliness: zero at or above the clean
-    /// threshold, rising linearly to <c>maxChance</c> at or below the filthy floor.
-    /// </summary>
-    public static float PoisonChanceFor(float cleanliness)
-    {
-        var s = Settings;
-        if (cleanliness >= s.cleanThreshold)
-        {
-            return 0f;
-        }
-        if (cleanliness <= s.filthyFloor)
-        {
-            return s.maxChance;
-        }
-        var span = s.cleanThreshold - s.filthyFloor;
-        if (span <= 0f)
-        {
-            return s.maxChance;
-        }
-        var t = (s.cleanThreshold - cleanliness) / span;
-        return s.maxChance * t;
-    }
-
-    public override string SettingsCategory() => "Connor's Clean Foods!";
+    public override string SettingsCategory() => "Connor's Localized Cleanliness!";
 
     public override void DoSettingsWindowContents(Rect inRect)
     {
+        var s = Settings;
         var list = new Listing_Standard();
         list.Begin(inRect);
 
-        list.Label("CleanFoods_Setting_CleanThreshold".Translate(Settings.cleanThreshold.ToString("0.0")),
-            tooltip: "CleanFoods_Setting_CleanThresholdDesc".Translate());
-        Settings.cleanThreshold = list.Slider(Settings.cleanThreshold, -5f, 0.5f);
+        list.CheckboxLabeled("LC_Setting_RemoveCookSkill".Translate(), ref s.removeCookSkill,
+            "LC_Setting_RemoveCookSkillDesc".Translate());
 
-        list.Gap();
-        list.Label("CleanFoods_Setting_FilthyFloor".Translate(Settings.filthyFloor.ToString("0.0")),
-            tooltip: "CleanFoods_Setting_FilthyFloorDesc".Translate());
-        Settings.filthyFloor = list.Slider(Settings.filthyFloor, -10f, -0.5f);
+        list.GapLine();
+        list.CheckboxLabeled("LC_Setting_LocalCleanliness".Translate(), ref s.localCleanliness,
+            "LC_Setting_LocalCleanlinessDesc".Translate());
 
-        list.Gap();
-        list.Label("CleanFoods_Setting_MaxChance".Translate((Settings.maxChance * 100f).ToString("0.0")),
-            tooltip: "CleanFoods_Setting_MaxChanceDesc".Translate());
-        Settings.maxChance = list.Slider(Settings.maxChance, 0f, 1f);
-
-        // Keep the floor strictly below the threshold so the curve always has a positive span.
-        if (Settings.filthyFloor >= Settings.cleanThreshold)
+        if (s.localCleanliness)
         {
-            Settings.filthyFloor = Settings.cleanThreshold - 0.5f;
+            list.CheckboxLabeled("LC_Setting_ForCooking".Translate(), ref s.localForCooking);
+            list.CheckboxLabeled("LC_Setting_ForSurgery".Translate(), ref s.localForSurgery);
+            list.CheckboxLabeled("LC_Setting_ForTending".Translate(), ref s.localForTending);
+
+            list.Gap();
+            list.Label("LC_Setting_Radius".Translate(s.radius.ToString("0.0")),
+                tooltip: "LC_Setting_RadiusDesc".Translate());
+            s.radius = Mathf.Round(list.Slider(s.radius, 1.5f, 12f) * 2f) / 2f;
+
+            list.Gap();
+            list.Label("LC_Setting_Falloff".Translate(s.falloffPower.ToString("0.0")),
+                tooltip: "LC_Setting_FalloffDesc".Translate());
+            s.falloffPower = list.Slider(s.falloffPower, 0.2f, 4f);
         }
 
         list.Gap();
-        if (list.ButtonText("CleanFoods_Setting_Reset".Translate()))
+        if (list.ButtonText("LC_Setting_Reset".Translate()))
         {
-            Settings.cleanThreshold = -2f;
-            Settings.filthyFloor = -5f;
-            Settings.maxChance = 0.05f;
+            s.removeCookSkill = false;
+            s.localCleanliness = true;
+            s.localForCooking = true;
+            s.localForSurgery = true;
+            s.localForTending = true;
+            s.radius = 4f;
+            s.falloffPower = 1f;
         }
 
         list.End();

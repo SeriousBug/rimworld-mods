@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <packageId>connor.cleanfoods</packageId>
-  <name>Connor's Clean Foods!</name>
+  <packageId>connor.localizedcleanliness</packageId>
+  <name>Connor's Localized Cleanliness!</name>
   <author>Kaan Connor Barmore-Genc</author>
-  <description>Food poisoning comes from a filthy kitchen, not an unskilled cook.
+  <description>Cleanliness where the work happens is what matters, not the average tidiness of the whole room.
 
-Vanilla rolls two poisoning checks when a meal is cooked: one for the kitchen's cleanliness, and one for the cook's Cooking skill. This mod removes the cook-skill check entirely. A low-skill cook in a clean kitchen never poisons anyone, and even a master cook can't make a clean meal next to a pile of rotting bodies.
+This mod rebalances two systems. It does not make either one easier by default; it moves the difficulty around so it lands where it makes sense.
 
-Poison risk is driven only by the cooking room's cleanliness, on a tunable curve (mod settings):
-- At or above the clean threshold (default -2 cleanliness), risk is zero.
-- Below it, risk scales with filth up to a maximum (default 5%) at the filthy floor (default -5).
+HOW VANILLA WORKS
+- Food poisoning: when a meal is cooked, the game rolls twice. Once against the cooking room's overall cleanliness, and once against the cook's Cooking skill. A low-skill cook poisons meals even in a spotless kitchen, purely because they are unskilled.
+- Surgery and tending: surgery success and post-tend infection are scaled by the whole room's cleanliness, averaged flat over every tile. A large room dilutes filth, so a huge dirty operating theatre can read cleaner than a small one.
 
-Raw meat, rotten food, and insect meat keep their own separate poisoning. This mod only changes poisoning from cooked meals.
+HOW THIS MOD WORKS
+- Food poisoning, surgery success, and post-tend infection are all driven by cleanliness measured locally around the spot where the work happens (the stove, the operating bed), not the flat room average. Nearby tiles count most, distant tiles count less, and tiles beyond a short radius or behind a wall do not count at all.
+- Optionally, cook skill can be removed as a food-poisoning factor, so foodborne illness comes from hygiene rather than incompetence. A careful low-skill cook is fine; a master cook next to a pile of rotting corpses is not. This is off by default; turn it on in mod settings.
+- The same vanilla cleanliness values and the same vanilla curves are reused. Nothing about how dirty a given tile or floor is has changed, only which tiles are considered.
 
-Makes kitchen cleanliness a real system and lets low-skill colonists cook without poisoning the colony.</description>
+WHAT THIS MEANS IN PLAY
+- Room size stops mattering on its own. A big kitchen is not automatically safe, and a big infirmary is not automatically risky. Keep the few tiles around the stove or the bed clean and you are fine; let them get bloody or filthy and you are not.
+- You no longer need to floor an entire hall in sterile tile. Sterile tile around the operating bed is what counts.
+- Outdoor cooking is handled properly. Vanilla has no room outdoors and falls back to a flat chance; this mod samples the actual tiles around the campfire, so cooking on clean ground outdoors is fine and cooking in an outdoor mess is not.
+
+Everything is configurable in mod settings (radius, falloff, and per-system toggles), and every part can be turned off.
+
+Requires Harmony. Raw meat, rotten food, and insect meat keep their own separate poisoning, which this mod does not touch.</description>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
