@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using Verse;
 
@@ -10,79 +7,56 @@ namespace Sidearms;
 /// Keeps sidearms out of the inventory sweep. Every path that empties a pawn's inventory — a
 /// caravan arriving home, a cancelled caravan, a shuttle unloading, a pawn dropped from a caravan —
 /// works by setting UnloadEverything, and all of them then ask FirstUnloadableThing what to take
-/// next, so one skip inside that loop covers all of them at once. It also settles
+/// next, so hiding the sidearms from that one property covers all of them at once. It also settles
 /// HasAnyUnloadableThing, which reads the same property: a pawn carrying nothing but sidearms is
 /// never marked as having anything to unload in the first place.
+///
+/// The property is answered against a container holding everything but the sidearms, rather than by
+/// vetting the answer or reimplementing the property. What counts as an item the pawn means to keep
+/// is a real set of rules — drug policy, inventory stock, how much packed food the pawn's food need
+/// justifies — and all of them stay vanilla's to decide, on a smaller inventory.
 /// </summary>
 [HarmonyPatch(typeof(Pawn_InventoryTracker), nameof(Pawn_InventoryTracker.FirstUnloadableThing), MethodType.Getter)]
 public static class Patch_Pawn_InventoryTracker_FirstUnloadableThing
 {
-    public static bool IsSidearm(Thing item, Pawn_InventoryTracker inventory)
+    // Reused across calls: every job giver looking for something to unload reads this property, and
+    // the contents are dead the moment the call returns.
+    private static readonly ThingOwner<Thing> WithoutSidearms = new();
+
+    private static bool inUse;
+
+    public static void Prefix(Pawn_InventoryTracker __instance, ref ThingOwner<Thing> __state)
     {
-        var comp = inventory?.pawn?.GetComp<CompSidearms>();
-        return comp != null && comp.IsSidearm(item);
-    }
+        // A patch of someone else's asking for this property from inside the property. Rare enough
+        // that answering it the vanilla way is better than keeping a pool of containers around.
+        if (inUse) return;
 
-    /// <summary>
-    /// Vanilla walks the inventory and returns the first thing the pawn is not meant to keep. This
-    /// adds one more reason to keep something, at the top of that loop:
-    ///
-    /// <code>
-    ///     foreach (Thing item in innerContainer)
-    ///     {
-    ///         if (IsSidearm(item, this)) continue;
-    ///         ...
-    /// </code>
-    ///
-    /// Skipping inside the loop rather than filtering the answer afterwards is what keeps this
-    /// independent of what order the inventory happens to be in, and leaves the property's own rules
-    /// about drugs, inventory stock and packed food to vanilla.
-    /// </summary>
-    public static IEnumerable<CodeInstruction> Transpiler(
-        IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-    {
-        var code = new List<CodeInstruction>(instructions);
+        var comp = __instance.pawn?.GetComp<CompSidearms>();
+        if (comp == null || comp.Sidearms.Count == 0) return;
 
-        // The property enumerates two collections. The one over the inventory is the one whose
-        // Current is a Thing.
-        var current = code.FindIndex(c =>
-            c.operand is MethodInfo { Name: "get_Current" } m && m.ReturnType == typeof(Thing));
-
-        // Where `continue` goes: the block that calls the same enumerator's MoveNext. It starts on
-        // the instruction before the call, which loads the enumerator.
-        var enumerator = current < 0 ? null : ((MethodInfo)code[current].operand).DeclaringType;
-        var moveNext = current < 0
-            ? -1
-            : code.FindIndex(current, c =>
-                c.operand is MethodInfo { Name: "MoveNext" } m && m.DeclaringType == enumerator);
-
-        if (current < 0 || moveNext <= current + 1)
+        // Written through the list rather than TryAdd: adding through the ThingOwner would take
+        // ownership of the weapons away from the pawn. This container is a view, and the pawn's own
+        // container stays untouched, so anything already walking it is undisturbed.
+        var items = WithoutSidearms.InnerListForReading;
+        items.Clear();
+        foreach (var item in __instance.innerContainer.InnerListForReading)
         {
-            Log.Error($"{SidearmsMod.LogPrefix} could not find the inventory loop in " +
-                      "FirstUnloadableThing, so sidearms will be unloaded with the rest of the " +
-                      "inventory. The rest of the mod is unaffected.");
-            return code;
+            if (!comp.IsSidearm(item)) items.Add(item);
         }
 
-        var nextItem = generator.DefineLabel();
-        code[moveNext - 1].labels.Add(nextItem);
+        __state = __instance.innerContainer;
+        __instance.innerContainer = WithoutSidearms;
+        inUse = true;
+    }
 
-        // The item is on the stack at this point rather than in a local, so the check reads it with
-        // a Dup. That way nothing here depends on which local vanilla stores the item in.
-        var keepChecking = generator.DefineLabel();
-        code[current + 1].labels.Add(keepChecking);
+    /// <summary>A finalizer rather than a postfix, so the pawn gets its inventory back even if the
+    /// property throws.</summary>
+    public static void Finalizer(Pawn_InventoryTracker __instance, ThingOwner<Thing> __state)
+    {
+        if (__state == null) return;
 
-        code.InsertRange(current + 1, new[]
-        {
-            new CodeInstruction(OpCodes.Dup),
-            new CodeInstruction(OpCodes.Ldarg_0),
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(
-                typeof(Patch_Pawn_InventoryTracker_FirstUnloadableThing), nameof(IsSidearm))),
-            new CodeInstruction(OpCodes.Brfalse, keepChecking),
-            new CodeInstruction(OpCodes.Pop),
-            new CodeInstruction(OpCodes.Br, nextItem),
-        });
-
-        return code;
+        __instance.innerContainer = __state;
+        WithoutSidearms.InnerListForReading.Clear();
+        inUse = false;
     }
 }
