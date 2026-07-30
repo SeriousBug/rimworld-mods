@@ -1,7 +1,7 @@
 [b]1.1[/b]
 [list]
 [*]Sidearms are no longer hauled off when a pawn's inventory is unloaded, so a caravan coming home keeps its sidearms.
-[*]Manage Sidearm Policies support: weapons a policy puts in a colonist's inventory count as sidearms here, and sidearms you assign by hand are offered back to the policy.
+[*]Manage Sidearm Policies support: weapons a policy puts in a colonist's inventory count as sidearms here, and sidearms you pick up by hand fulfill the policy's slots instead of it fetching a duplicate.
 [/list]
 
 [b]1.0[/b]
