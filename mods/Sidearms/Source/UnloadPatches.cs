@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using Verse;
 
@@ -7,46 +10,79 @@ namespace Sidearms;
 /// Keeps sidearms out of the inventory sweep. Every path that empties a pawn's inventory — a
 /// caravan arriving home, a cancelled caravan, a shuttle unloading, a pawn dropped from a caravan —
 /// works by setting UnloadEverything, and all of them then ask FirstUnloadableThing what to take
-/// next, so excluding sidearms here covers all of them at once.
+/// next, so one skip inside that loop covers all of them at once. It also settles
+/// HasAnyUnloadableThing, which reads the same property: a pawn carrying nothing but sidearms is
+/// never marked as having anything to unload in the first place.
 /// </summary>
 [HarmonyPatch(typeof(Pawn_InventoryTracker), nameof(Pawn_InventoryTracker.FirstUnloadableThing), MethodType.Getter)]
 public static class Patch_Pawn_InventoryTracker_FirstUnloadableThing
 {
-    /// <summary>
-    /// Vanilla returns the first thing in container order that the pawn is not meant to keep, so
-    /// what the postfix is allowed to discard depends on where the sidearms sit. With them at the
-    /// back, a sidearm can only come back as the answer once everything ahead of it is spoken for,
-    /// which is what makes discarding it safe: there is no cargo left hiding behind it.
-    /// </summary>
-    public static void Prefix(Pawn_InventoryTracker __instance)
+    public static bool IsSidearm(Thing item, Pawn_InventoryTracker inventory)
     {
-        var comp = __instance.pawn?.GetComp<CompSidearms>();
-        if (comp == null || comp.Sidearms.Count == 0) return;
-
-        // Assignment through the indexer only. Remove/Insert would bump the list's version and
-        // break any enumeration of the inventory further up the stack.
-        var items = __instance.innerContainer.InnerListForReading;
-        var write = 0;
-        for (var i = 0; i < items.Count; i++)
-        {
-            if (comp.IsSidearm(items[i])) continue;
-
-            if (i != write)
-            {
-                var item = items[i];
-                for (var j = i; j > write; j--) items[j] = items[j - 1];
-                items[write] = item;
-            }
-
-            write++;
-        }
+        var comp = inventory?.pawn?.GetComp<CompSidearms>();
+        return comp != null && comp.IsSidearm(item);
     }
 
-    public static void Postfix(Pawn_InventoryTracker __instance, ref ThingCount __result)
+    /// <summary>
+    /// Vanilla walks the inventory and returns the first thing the pawn is not meant to keep. This
+    /// adds one more reason to keep something, at the top of that loop:
+    ///
+    /// <code>
+    ///     foreach (Thing item in innerContainer)
+    ///     {
+    ///         if (IsSidearm(item, this)) continue;
+    ///         ...
+    /// </code>
+    ///
+    /// Skipping inside the loop rather than filtering the answer afterwards is what keeps this
+    /// independent of what order the inventory happens to be in, and leaves the property's own rules
+    /// about drugs, inventory stock and packed food to vanilla.
+    /// </summary>
+    public static IEnumerable<CodeInstruction> Transpiler(
+        IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
-        if (__result.Thing == null) return;
+        var code = new List<CodeInstruction>(instructions);
 
-        var comp = __instance.pawn?.GetComp<CompSidearms>();
-        if (comp != null && comp.IsSidearm(__result.Thing)) __result = default;
+        // The property enumerates two collections. The one over the inventory is the one whose
+        // Current is a Thing.
+        var current = code.FindIndex(c =>
+            c.operand is MethodInfo { Name: "get_Current" } m && m.ReturnType == typeof(Thing));
+
+        // Where `continue` goes: the block that calls the same enumerator's MoveNext. It starts on
+        // the instruction before the call, which loads the enumerator.
+        var enumerator = current < 0 ? null : ((MethodInfo)code[current].operand).DeclaringType;
+        var moveNext = current < 0
+            ? -1
+            : code.FindIndex(current, c =>
+                c.operand is MethodInfo { Name: "MoveNext" } m && m.DeclaringType == enumerator);
+
+        if (current < 0 || moveNext <= current + 1)
+        {
+            Log.Error($"{SidearmsMod.LogPrefix} could not find the inventory loop in " +
+                      "FirstUnloadableThing, so sidearms will be unloaded with the rest of the " +
+                      "inventory. The rest of the mod is unaffected.");
+            return code;
+        }
+
+        var nextItem = generator.DefineLabel();
+        code[moveNext - 1].labels.Add(nextItem);
+
+        // The item is on the stack at this point rather than in a local, so the check reads it with
+        // a Dup. That way nothing here depends on which local vanilla stores the item in.
+        var keepChecking = generator.DefineLabel();
+        code[current + 1].labels.Add(keepChecking);
+
+        code.InsertRange(current + 1, new[]
+        {
+            new CodeInstruction(OpCodes.Dup),
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Call, AccessTools.Method(
+                typeof(Patch_Pawn_InventoryTracker_FirstUnloadableThing), nameof(IsSidearm))),
+            new CodeInstruction(OpCodes.Brfalse, keepChecking),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Br, nextItem),
+        });
+
+        return code;
     }
 }
