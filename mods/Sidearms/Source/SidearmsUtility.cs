@@ -90,6 +90,7 @@ public static class SidearmsUtility
         if (!comp.HasRoomFor(weapon)) return false;
 
         comp.Register(weapon);
+        ManageSidearmPoliciesCompat.NotifyTakenAsSidearm(pawn, weapon);
         return true;
     }
 

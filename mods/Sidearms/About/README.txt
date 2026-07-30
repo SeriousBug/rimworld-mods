@@ -39,6 +39,8 @@ A swap costs the pawn a moment of stance delay, so there is a cooldown between a
 
 Requires Harmony. Safe to add to an existing save. Removing it mid-save leaves the weapons in your pawns' inventories; drop them from the gear tab first if you want them back.
 
+[b]Manage Sidearm Policies.[/b] Supported. Weapons a sidearm policy puts in a colonist's inventory get a command-bar button and are used by the auto-switch, same as ones you picked out by hand. The policy keeps control of how many weapons a colonist carries, so the limits in this mod's settings only apply to the sidearms you assign yourself.
+
 Should not conflict with other mods that touch equipment, but if you find one that does, say so in the comments.
 
 [h2]Source[/h2]

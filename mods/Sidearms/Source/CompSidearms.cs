@@ -21,8 +21,12 @@ public class CompSidearms : ThingComp
 
     private int lastSwapTick = -99999;
     private int sinceLastCheck;
+    private int sincePolicySync;
 
     private const int CheckIntervalTicks = 30;
+
+    // Another mod fetching a sidearm takes far longer than this, so nothing is waiting on it.
+    private const int PolicySyncIntervalTicks = 600;
 
     public Pawn Pawn => (Pawn)parent;
 
@@ -34,6 +38,7 @@ public class CompSidearms : ThingComp
         // (a raid, a caravan arrival) evaluates on the same tick forever, and the cost lands as a
         // spike instead of a flat background load.
         sinceLastCheck = Mathf.Abs(parent.thingIDNumber) % CheckIntervalTicks;
+        sincePolicySync = Mathf.Abs(parent.thingIDNumber) % PolicySyncIntervalTicks;
     }
 
     public List<ThingWithComps> Sidearms
@@ -69,6 +74,13 @@ public class CompSidearms : ThingComp
 
     private void Evaluate(int delta)
     {
+        sincePolicySync += delta;
+        if (sincePolicySync >= PolicySyncIntervalTicks)
+        {
+            sincePolicySync = 0;
+            ManageSidearmPoliciesCompat.SyncAssignedSidearms(this);
+        }
+
         // Combat state changes on the order of seconds, not ticks, so re-evaluating every tick
         // would be wasted work on every pawn on the map.
         sinceLastCheck += delta;
@@ -119,7 +131,13 @@ public class CompSidearms : ThingComp
         }
     }
 
-    public int UsedSidearmSlots => Sidearms.Count;
+    // Sidearms another mod's policy is responsible for are not counted. That mod has its own count
+    // and weight ceilings, and a weapon the player cannot remove here counting against a limit here
+    // would leave a pawn stuck below both.
+    private IEnumerable<ThingWithComps> OwnSidearms =>
+        Sidearms.Where(w => !ManageSidearmPoliciesCompat.IsPolicyManaged(Pawn, w));
+
+    public int UsedSidearmSlots => OwnSidearms.Count();
 
     public bool HasRoomFor(Thing weapon)
     {
@@ -134,7 +152,7 @@ public class CompSidearms : ThingComp
         if (capacity <= 0f) return false;
 
         var budget = capacity * settings.maxSidearmMassFraction;
-        var used = Sidearms.Sum(w => w.GetStatValue(StatDefOf.Mass) * w.stackCount);
+        var used = OwnSidearms.Sum(w => w.GetStatValue(StatDefOf.Mass) * w.stackCount);
         return used + weapon.GetStatValue(StatDefOf.Mass) <= budget;
     }
 
