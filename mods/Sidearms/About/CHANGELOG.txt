@@ -1,3 +1,9 @@
+[b]1.2[/b]
+[list]
+[*]An auto-swap no longer forces the pawn back onto the target it had before the swap. Pawns retarget normally instead of charging the enemy they were shooting at, or emptying a magazine into a downed one. An attack you ordered by hand is still resumed.
+[*]Weapons another mod stows in a pawn's inventory, such as Grab Your Tool! swapping to a tool for a job, are now carried as sidearms, so the swap gizmo no longer disappears once the job is done.
+[/list]
+
 [b]1.1[/b]
 [list]
 [*]Sidearms are no longer hauled off when a pawn's inventory is unloaded, so a caravan coming home keeps its sidearms.

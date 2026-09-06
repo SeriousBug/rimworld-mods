@@ -19,6 +19,10 @@ public class CompSidearms : ThingComp
     // pawn is holding what it wants to hold.
     private ThingWithComps preferredPrimary;
 
+    // A weapon that just left the pawn's hands. Whether it landed in the pawn's own inventory is
+    // not known until the transfer finishes, so the answer is read on the next tick.
+    private ThingWithComps leftHands;
+
     private int lastSwapTick = -99999;
     private int sinceLastCheck;
     private int sincePolicySync;
@@ -74,6 +78,8 @@ public class CompSidearms : ThingComp
 
     private void Evaluate(int delta)
     {
+        AdoptStowedWeapon();
+
         sincePolicySync += delta;
         if (sincePolicySync >= PolicySyncIntervalTicks)
         {
@@ -88,6 +94,31 @@ public class CompSidearms : ThingComp
         sinceLastCheck = 0;
 
         AutoSwitch.Evaluate(this);
+    }
+
+    /// <summary>
+    /// Called when a weapon leaves the pawn's hands, whatever moved it. It is not in the inventory
+    /// yet: a transfer takes the weapon out of one container before putting it in the other.
+    /// </summary>
+    public void NotifyPrimaryRemoved(ThingWithComps weapon) => leftHands = weapon;
+
+    /// <summary>
+    /// Picks up a weapon another mod stowed in the pawn's inventory out of their hands, so it keeps
+    /// its gizmo and the pawn can swap back to it. Grab Your Tool! does this every time a colonist
+    /// picks up a tool for a job.
+    /// </summary>
+    private void AdoptStowedWeapon()
+    {
+        var weapon = leftHands;
+        leftHands = null;
+
+        if (weapon == null || weapon.Destroyed) return;
+        if (!SidearmsUtility.IsEligibleWeapon(weapon)) return;
+        if (!Pawn.inventory.innerContainer.Contains(weapon)) return;
+
+        // No room check: the weapon is in the inventory either way, and a carried weapon with no
+        // gizmo is the bug being fixed here.
+        Register(weapon);
     }
 
     public bool IsSidearm(Thing weapon) => sidearms.Contains(weapon);

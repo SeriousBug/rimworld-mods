@@ -75,3 +75,18 @@ public static class Patch_Pawn_EquipmentTracker_AddEquipment
         comp.NotifyPrimaryChangedExternally();
     }
 }
+
+/// <summary>
+/// Another mod moving a weapon out of the pawn's hands into that pawn's own inventory leaves the
+/// pawn carrying a weapon nothing here knows about: no gizmo for it, and no way back to it. Grab
+/// Your Tool! does exactly this whenever a colonist picks up a tool for a job, so a colonist who
+/// mines once ends up with a rifle in the pack and no button to draw it.
+/// </summary>
+[HarmonyPatch(typeof(Pawn_EquipmentTracker), nameof(Pawn_EquipmentTracker.Notify_EquipmentRemoved))]
+public static class Patch_Pawn_EquipmentTracker_Notify_EquipmentRemoved
+{
+    public static void Postfix(Pawn_EquipmentTracker __instance, ThingWithComps eq)
+    {
+        __instance.pawn?.GetComp<CompSidearms>()?.NotifyPrimaryRemoved(eq);
+    }
+}

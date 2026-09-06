@@ -102,14 +102,16 @@ public static class SidearmsUtility
     private readonly struct AttackJobResume
     {
         public readonly LocalTargetInfo Target;
+        public readonly JobDef Def;
         public readonly bool PlayerForced;
-        public readonly bool Valid;
 
-        public AttackJobResume(LocalTargetInfo target, bool playerForced)
+        public bool Valid => Def != null;
+
+        public AttackJobResume(JobDef def, LocalTargetInfo target, bool playerForced)
         {
+            Def = def;
             Target = target;
             PlayerForced = playerForced;
-            Valid = true;
         }
     }
 
@@ -119,25 +121,43 @@ public static class SidearmsUtility
         if (job == null) return default;
         if (job.def != JobDefOf.AttackStatic && job.def != JobDefOf.AttackMelee) return default;
 
-        return new AttackJobResume(job.targetA, job.playerForced);
+        return new AttackJobResume(job.def, job.targetA, job.playerForced);
     }
 
+    /// <summary>
+    /// The job was aiming with a verb that belongs to a weapon now sitting in the inventory, so it
+    /// cannot continue either way and is ended.
+    ///
+    /// Only an attack the player ordered by hand is put back. An attack the AI or the drafted think
+    /// tree picked is left for them to pick again on the next tick, against whatever target suits
+    /// the weapon now in hand: re-issuing it here hands the pawn a job with no job giver and no
+    /// expiry, which it then runs to completion with no retargeting. That is what sent a pawn
+    /// charging across the map at the enemy it had been shooting, and what kept it firing at a
+    /// melee attacker that was already down.
+    /// </summary>
     private static void ResumeAttackJob(Pawn pawn, AttackJobResume resume)
     {
         if (!resume.Valid) return;
 
         pawn.jobs.EndCurrentJob(JobCondition.InterruptForced, startNewJob: false);
 
+        if (!resume.PlayerForced) return;
+
         var target = resume.Target;
         if (!target.IsValid || target.ThingDestroyed) return;
-        if (target.Thing is Pawn { Dead: true }) return;
+        if (target.Thing is Pawn { Dead: true } or Pawn { Downed: true }) return;
 
-        var jobDef = pawn.equipment.Primary?.def.IsMeleeWeapon ?? true
-            ? JobDefOf.AttackMelee
-            : JobDefOf.AttackStatic;
+        var holdingMelee = pawn.equipment.Primary?.def.IsMeleeWeapon ?? true;
 
-        var job = JobMaker.MakeJob(jobDef, target);
-        job.playerForced = resume.PlayerForced;
+        // Drawing a knife because something is on top of the pawn is not an order to charge the
+        // enemy it was shooting at.
+        if (holdingMelee && resume.Def == JobDefOf.AttackStatic && !pawn.Position.AdjacentTo8WayOrInside(target))
+        {
+            return;
+        }
+
+        var job = JobMaker.MakeJob(holdingMelee ? JobDefOf.AttackMelee : JobDefOf.AttackStatic, target);
+        job.playerForced = true;
         pawn.jobs.StartJob(job, JobCondition.InterruptForced);
     }
 }
