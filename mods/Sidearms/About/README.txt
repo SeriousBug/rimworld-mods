@@ -5,7 +5,7 @@ Pawns carry spare weapons in their inventory and swap to them. A sniper with a k
 [h2]What it does[/h2]
 
 [list]
-[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick "Pick up {weapon}". The pawn walks over, takes it, and keeps it in their inventory. Every weapon a pawn carries is a sidearm, whether you handed it over or another mod put it there.
+[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick it up. The pawn walks over, takes it, and keeps it in their inventory. Every weapon a pawn carries is a sidearm, whether you handed it over or another mod put it there.
 [*][b]Swap by hand.[/b] Select a colonist and every sidearm they carry shows up as a button on the command bar. Click it to draw that weapon; whatever they were holding goes back into the inventory.
 [*][b]Swap automatically.[/b] When an enemy closes to melee range, a pawn holding a gun draws their best melee sidearm, and puts the gun back once the enemy is off them.
 [*][b]Raiders do it too.[/b] Enemy pawns play by the same rules, and gunners spawn with a cheap melee weapon so they fight back with a knife instead of the butt of their rifle. Both of these can be turned off.

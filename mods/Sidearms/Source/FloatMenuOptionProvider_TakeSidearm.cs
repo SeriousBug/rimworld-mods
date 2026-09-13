@@ -6,8 +6,8 @@ namespace Sidearms;
 
 /// <summary>
 /// Adds "Carry as sidearm" when right-clicking a weapon on the ground. When every carried weapon is
-/// a sidearm there is nothing to mark, so the option is worded as what it does, and it stays: the
-/// vanilla pick-up option is hidden on the player's own map.
+/// a sidearm there is nothing to mark and vanilla's own "Pick up" does the same job, so the option
+/// is not offered at all.
 ///
 /// FloatMenuMakerMap builds its provider list by reflecting over every non-abstract subclass of
 /// FloatMenuOptionProvider, so subclassing is enough; there is nothing to register and nothing
@@ -24,7 +24,8 @@ public class FloatMenuOptionProvider_TakeSidearm : FloatMenuOptionProvider
     protected override bool RequiresManipulation => true;
 
     protected override bool AppliesInt(FloatMenuContext context) =>
-        SidearmsUtility.CanCarrySidearms(context.FirstSelectedPawn);
+        !SidearmsMod.Settings.allCarriedWeaponsAreSidearms
+        && SidearmsUtility.CanCarrySidearms(context.FirstSelectedPawn);
 
     protected override FloatMenuOption GetSingleOptionFor(Thing clickedThing, FloatMenuContext context)
     {
@@ -34,9 +35,7 @@ public class FloatMenuOptionProvider_TakeSidearm : FloatMenuOptionProvider
         if (!clickedThing.Spawned) return null;
 
         var weapon = (ThingWithComps)clickedThing;
-        var everythingIsASidearm = SidearmsMod.Settings.allCarriedWeaponsAreSidearms;
-        var label = (everythingIsASidearm ? "Sidearms_PickUpWeapon" : "Sidearms_TakeAsSidearm")
-            .Translate(weapon.LabelShort);
+        var label = "Sidearms_TakeAsSidearm".Translate(weapon.LabelShort);
 
         if (pawn.WorkTagIsDisabled(WorkTags.Violent))
         {
@@ -44,7 +43,7 @@ public class FloatMenuOptionProvider_TakeSidearm : FloatMenuOptionProvider
         }
 
         var comp = pawn.GetComp<CompSidearms>();
-        if (!everythingIsASidearm && !comp.HasRoomFor(weapon))
+        if (!comp.HasRoomFor(weapon))
         {
             return Disabled(label, "Sidearms_NoRoom".Translate());
         }

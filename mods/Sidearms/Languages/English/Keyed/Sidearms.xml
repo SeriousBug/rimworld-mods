@@ -2,7 +2,6 @@
 <LanguageData>
 
   <Sidearms_TakeAsSidearm>Carry {0} as sidearm</Sidearms_TakeAsSidearm>
-  <Sidearms_PickUpWeapon>Pick up {0}</Sidearms_PickUpWeapon>
   <Sidearms_NoRoom>no room for another sidearm</Sidearms_NoRoom>
   <Sidearms_SwapTo_Desc>Put away the current weapon and draw the {0}.</Sidearms_SwapTo_Desc>
   <Sidearms_Inspect>Sidearms: {0}</Sidearms_Inspect>
