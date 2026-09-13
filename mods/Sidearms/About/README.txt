@@ -5,7 +5,7 @@ Pawns carry spare weapons in their inventory and swap to them. A sniper with a k
 [h2]What it does[/h2]
 
 [list]
-[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick it up. The pawn walks over, takes it, and keeps it in their inventory. Every weapon a pawn carries is a sidearm, whether you handed it over or another mod put it there.
+[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick "Carry {weapon} as sidearm". The pawn walks over, picks it up, and keeps it in their inventory. A mod setting can make every weapon a pawn carries a sidearm instead, whatever put it there.
 [*][b]Swap by hand.[/b] Select a colonist and every sidearm they carry shows up as a button on the command bar. Click it to draw that weapon; whatever they were holding goes back into the inventory.
 [*][b]Swap automatically.[/b] When an enemy closes to melee range, a pawn holding a gun draws their best melee sidearm, and puts the gun back once the enemy is off them.
 [*][b]Raiders do it too.[/b] Enemy pawns play by the same rules, and gunners spawn with a cheap melee weapon so they fight back with a knife instead of the butt of their rifle. Both of these can be turned off.
@@ -26,7 +26,7 @@ A swap costs the pawn a moment of stance delay, so there is a cooldown between a
 [h2]Mod settings[/h2]
 
 [list]
-[*]Every carried weapon is a sidearm (on). Turn it off to pick sidearms out by hand with "Carry {weapon} as sidearm"; only those get a button, and the next two settings appear to limit them. Colonies from before this setting existed start with it off.
+[*]Every carried weapon is a sidearm (off). Turn it on and a pawn gets a button for every weapon they carry, the "Carry as sidearm" option gives way to the game's own "Pick up", and the next two settings go away with nothing left to limit.
 [*]Maximum sidearms per pawn (default 2)
 [*]Share of carry capacity sidearms may use (default 50%)
 [*]Draw a melee weapon in melee, and whether to put it away afterwards (both on)

@@ -92,8 +92,6 @@ public class CompSidearms : ThingComp
         {
             sidearms ??= new List<ThingWithComps>();
             sidearms.RemoveAll(w => w == null);
-
-            if (sidearms.Count > 0) SidearmsMod.Settings.NotifyLoadedSaveHasMarkedSidearms();
         }
     }
 
