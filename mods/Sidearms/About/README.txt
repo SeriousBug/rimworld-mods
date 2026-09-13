@@ -26,14 +26,14 @@ A swap costs the pawn a moment of stance delay, so there is a cooldown between a
 [h2]Mod settings[/h2]
 
 [list]
-[*]Every carried weapon is a sidearm (on). Turn it off to pick sidearms out by hand with "Carry {weapon} as sidearm"; only those get a button, and the two limits below apply to them. Colonies from before this setting existed start with it off.
+[*]Every carried weapon is a sidearm (on). Turn it off to pick sidearms out by hand with "Carry {weapon} as sidearm"; only those get a button, and the next two settings appear to limit them. Colonies from before this setting existed start with it off.
 [*]Maximum sidearms per pawn (default 2)
 [*]Share of carry capacity sidearms may use (default 50%)
 [*]Draw a melee weapon in melee, and whether to put it away afterwards (both on)
 [*]Reach for a longer-ranged weapon (off)
+[*]Minimum ticks between automatic swaps (default 120)
 [*]Apply to non-player pawns (on). Turn this off to make auto-switching a player-only advantage.
 [*]Give raiders a melee sidearm (on), and the most valuable one they may spawn with (default 60 silver, so you get knives and clubs, not free longswords)
-[*]Minimum ticks between automatic swaps (default 120)
 [/list]
 
 [h2]Compatibility[/h2]
