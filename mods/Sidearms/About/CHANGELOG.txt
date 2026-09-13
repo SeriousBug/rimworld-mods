@@ -1,6 +1,7 @@
 [b]1.2[/b]
 [list]
-[*]Every weapon a colonist carries now gets a swap button, however it got into their inventory, so there is nothing to mark and no limit to manage. Picking one up is all it takes, so the "Carry as sidearm" option steps aside for the game's own "Pick up". Turn off "Every carried weapon is a sidearm" in mod settings to keep choosing sidearms by hand, option and all. Colonies that were already running an older version keep the old behaviour.
+[*]Every weapon a colonist carries now gets a swap button, however it got into their pack, so there is nothing to mark and no limit to manage. Picking a weapon up is all it takes, and the "Carry as sidearm" option steps aside for the game's own "Pick up".
+[*]Marking sidearms one at a time is still there as "Every carried weapon is a sidearm" in mod settings; turn it off and the old option, the per-pawn limit and the weight share come back. Colonies from before this update start with it off, so nothing changes under a colony already being played.
 [*]A sidearm another mod borrows to work with, such as Grab Your Tool! drawing the axe you carry to chop a tree, is a sidearm again when the job ends and it goes back in the pack. It used to come back with no button.
 [*]An auto-swap no longer forces the pawn back onto the target it had before the swap. Pawns retarget normally instead of charging the enemy they were shooting at, or emptying a magazine into a downed one. An attack you ordered by hand is still resumed.
 [/list]
