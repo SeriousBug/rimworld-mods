@@ -1,8 +1,8 @@
 [b]1.2[/b]
 [list]
-[*]New setting, "Every carried weapon is a sidearm": a swap button for every weapon in a pawn's pack, however it got there, with nothing to pick out and no limit to manage. It is off by default, so sidearms stay the ones you choose with "Carry as sidearm".
-[*]A sidearm another mod borrows to work with, such as Grab Your Tool! drawing the axe you carry to chop a tree, is a sidearm again when the job ends and it goes back in the pack. It used to come back with no button.
-[*]An auto-swap no longer forces the pawn back onto the target it had before the swap. Pawns retarget normally instead of charging the enemy they were shooting at, or emptying a magazine into a downed one. An attack you ordered by hand is still resumed.
+[*]New setting, "Every carried weapon is a sidearm" treats all weapons in a pawn's inventory as a potential sidearm, with buttons to switch manually and auto-switch logic applied.
+[*]Fixed a bug where sidearms would be forgotten if Grab Your Tool! equipped that sidearm as a tool.
+[*]Auto-swap no longer forces the pawn to continue attacking the same target it had before the swap. Pawns target normally.
 [/list]
 
 [b]1.1[/b]
@@ -17,5 +17,5 @@
 [*]Carry weapons as sidearms, swap by gizmo.
 [*]Auto-draw melee in melee, auto-restore the previous weapon afterwards.
 [*]Optional auto-swap to a longer-ranged weapon.
-[*]Raiders and other faction pawns use sidearms too, and gunners spawn with a cheap melee weapon.
+[*]Raiders and other faction pawns use sidearms too, and gunners spawn with a melee weapon.
 [/list]

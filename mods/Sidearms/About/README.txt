@@ -5,7 +5,7 @@ Pawns carry spare weapons in their inventory and swap to them. A sniper with a k
 [h2]What it does[/h2]
 
 [list]
-[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick "Carry {weapon} as sidearm". The pawn walks over, picks it up, and keeps it in their inventory. A mod setting can make every weapon a pawn carries a sidearm instead, whatever put it there.
+[*][b]Carry spare weapons.[/b] Right-click a weapon on the ground with a pawn selected and pick "Carry {weapon} as sidearm". The pawn walks over, picks it up, and keeps it in their inventory. You can toggle a setting to treat all weapons in a pawn's inventory as weapons. All weapons will get a button to switch to them manually, and auto-switch logic will apply to all weapons.
 [*][b]Swap by hand.[/b] Select a colonist and every sidearm they carry shows up as a button on the command bar. Click it to draw that weapon; whatever they were holding goes back into the inventory.
 [*][b]Swap automatically.[/b] When an enemy closes to melee range, a pawn holding a gun draws their best melee sidearm, and puts the gun back once the enemy is off them.
 [*][b]Raiders do it too.[/b] Enemy pawns play by the same rules, and gunners spawn with a cheap melee weapon so they fight back with a knife instead of the butt of their rifle. Both of these can be turned off.
@@ -26,7 +26,7 @@ A swap costs the pawn a moment of stance delay, so there is a cooldown between a
 [h2]Mod settings[/h2]
 
 [list]
-[*]Every carried weapon is a sidearm (off). Turn it on and a pawn gets a button for every weapon they carry, the "Carry as sidearm" option gives way to the game's own "Pick up", and the next two settings go away with nothing left to limit.
+[*]Every carried weapon is a sidearm (default off). Turn on if you want everything a pawn is carrying to be a sidearm, or if you are using an incompatible mod that makes your pawn pick up weapons to use as sidearms.
 [*]Maximum sidearms per pawn (default 2)
 [*]Share of carry capacity sidearms may use (default 50%)
 [*]Draw a melee weapon in melee, and whether to put it away afterwards (both on)
@@ -44,7 +44,7 @@ Requires Harmony. Safe to add to an existing save. Removing it mid-save leaves t
 
 [b][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2947023388]Grab Your Tool![/url][/b] is supported: a weapon it draws to work with keeps its button and comes back as a sidearm when the job is done.
 
-No known conflicts with other mods that touch equipment. If you find one, say so in the comments.
+Should not conflict with other mods that touch equipment, but if you find one that does, say so in the comments.
 
 [h2]Source[/h2]
 
