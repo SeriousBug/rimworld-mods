@@ -19,7 +19,7 @@ Sidearms live in the pawn's normal inventory. They weigh something, they show up
 
 For raiders and other non-player pawns the trigger is different, because the engine already refuses to let them fire while a melee attacker is next to them. They draw melee exactly while that block is in effect, and re-draw the gun the moment they are allowed to shoot again.
 
-[b]To longer range (off by default).[/b] Switch on "Reach for a longer-ranged weapon" in mod settings. When your pawn's target is further away than their current weapon can shoot, they swap to the [i]shortest[/i] sidearm that still reaches, keeping the better close-range weapon in reserve for when the fight comes back to them. Melee takes priority: if an enemy is within melee range, the pawn draws melee instead.
+[b]To longer range (off by default).[/b] Switch on "Reach for a longer-ranged weapon" in mod settings. When your pawn's target is further away than their current weapon can shoot, they swap to the [i]shortest[/i] sidearm that still reaches. Shortest, not longest, because a longer gun is usually a worse gun up close and the fight may come back to them. Melee takes priority: if an enemy is within melee range, the pawn draws melee instead.
 
 A swap costs the pawn a moment of stance delay, so there is a cooldown between automatic swaps to keep a pawn from flip-flopping. Anything you equip by hand sticks; the auto-switch will not undo a choice you made.
 
