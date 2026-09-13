@@ -91,13 +91,16 @@ public class SidearmsSettings : ModSettings
             carriedWeaponsChoiceMade = true;
         }
 
-        list.GapLine();
+        // Both ceilings are about which weapons get to be sidearms, a question that does not exist
+        // when they all are.
+        if (!allCarriedWeaponsAreSidearms)
+        {
+            list.Label("Sidearms_Setting_MaxSidearms".Translate(maxSidearms));
+            maxSidearms = Mathf.RoundToInt(list.Slider(maxSidearms, 0f, 6f));
 
-        list.Label("Sidearms_Setting_MaxSidearms".Translate(maxSidearms));
-        maxSidearms = Mathf.RoundToInt(list.Slider(maxSidearms, 0f, 6f));
-
-        list.Label("Sidearms_Setting_MassFraction".Translate(maxSidearmMassFraction.ToStringPercent()));
-        maxSidearmMassFraction = list.Slider(maxSidearmMassFraction, 0.1f, 1f);
+            list.Label("Sidearms_Setting_MassFraction".Translate(maxSidearmMassFraction.ToStringPercent()));
+            maxSidearmMassFraction = list.Slider(maxSidearmMassFraction, 0.1f, 1f);
+        }
 
         list.GapLine();
 
@@ -113,22 +116,26 @@ public class SidearmsSettings : ModSettings
         list.CheckboxLabeled("Sidearms_Setting_AutoLongerRange".Translate(), ref autoSwitchToLongerRange,
             "Sidearms_Setting_AutoLongerRange_Tip".Translate());
 
+        list.Label("Sidearms_Setting_Cooldown".Translate(swapCooldownTicks));
+        swapCooldownTicks = Mathf.RoundToInt(list.Slider(swapCooldownTicks, 30f, 600f));
+
         list.GapLine();
 
         list.CheckboxLabeled("Sidearms_Setting_ApplyToNpcs".Translate(), ref applyToNonPlayerPawns,
             "Sidearms_Setting_ApplyToNpcs_Tip".Translate());
 
-        list.CheckboxLabeled("Sidearms_Setting_NpcMelee".Translate(), ref giveNpcMeleeSidearms,
-            "Sidearms_Setting_NpcMelee_Tip".Translate());
-
-        if (giveNpcMeleeSidearms)
+        // A raider who never switches has no use for a knife it will not draw.
+        if (applyToNonPlayerPawns)
         {
-            list.Label("Sidearms_Setting_NpcMeleePrice".Translate(npcSidearmMaxPrice.ToString("F0")));
-            npcSidearmMaxPrice = Mathf.Round(list.Slider(npcSidearmMaxPrice, 10f, 300f));
-        }
+            list.CheckboxLabeled("Sidearms_Setting_NpcMelee".Translate(), ref giveNpcMeleeSidearms,
+                "Sidearms_Setting_NpcMelee_Tip".Translate());
 
-        list.Label("Sidearms_Setting_Cooldown".Translate(swapCooldownTicks));
-        swapCooldownTicks = Mathf.RoundToInt(list.Slider(swapCooldownTicks, 30f, 600f));
+            if (giveNpcMeleeSidearms)
+            {
+                list.Label("Sidearms_Setting_NpcMeleePrice".Translate(npcSidearmMaxPrice.ToString("F0")));
+                npcSidearmMaxPrice = Mathf.Round(list.Slider(npcSidearmMaxPrice, 10f, 300f));
+            }
+        }
 
         list.End();
     }

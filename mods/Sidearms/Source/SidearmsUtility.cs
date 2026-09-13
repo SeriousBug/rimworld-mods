@@ -87,7 +87,7 @@ public static class SidearmsUtility
 
         var comp = pawn.GetComp<CompSidearms>();
         if (comp.IsSidearm(weapon)) return true;
-        if (!SidearmsMod.Settings.allCarriedWeaponsAreSidearms && !comp.HasRoomFor(weapon)) return false;
+        if (!comp.HasRoomFor(weapon)) return false;
 
         comp.Register(weapon);
         ManageSidearmPoliciesCompat.NotifyTakenAsSidearm(pawn, weapon);

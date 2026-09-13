@@ -98,7 +98,8 @@ public static class NpcSidearmGenerator
             if (thing.def.IsMeleeWeapon) return true;
         }
 
-        return comp.Sidearms.Count >= SidearmsMod.Settings.maxSidearms;
+        return !SidearmsMod.Settings.allCarriedWeaponsAreSidearms
+            && comp.Sidearms.Count >= SidearmsMod.Settings.maxSidearms;
     }
 
     private static bool TryPickMelee(Pawn pawn, out ThingStuffPair result)

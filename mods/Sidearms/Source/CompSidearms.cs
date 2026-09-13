@@ -220,6 +220,7 @@ public class CompSidearms : ThingComp
 
     public bool HasRoomFor(Thing weapon)
     {
+        if (SidearmsMod.Settings.allCarriedWeaponsAreSidearms) return true;
         if (UsedSidearmSlots >= SidearmsMod.Settings.maxSidearms) return false;
         return WithinMassBudget(weapon);
     }
