@@ -4,7 +4,8 @@ using Verse;
 namespace Sidearms;
 
 /// <summary>
-/// Keeps sidearms out of the inventory sweep. Every path that empties a pawn's inventory — a
+/// Keeps sidearms out of the inventory sweep. Only the weapons the player marked: a pawn hauling a
+/// crate of rifles home is hauling, whatever buttons those rifles get on the way. Every path that empties a pawn's inventory — a
 /// caravan arriving home, a cancelled caravan, a shuttle unloading, a pawn dropped from a caravan —
 /// works by setting UnloadEverything, and all of them then ask FirstUnloadableThing what to take
 /// next, so hiding the sidearms from that one property covers all of them at once. It also settles
@@ -32,7 +33,7 @@ public static class Patch_Pawn_InventoryTracker_FirstUnloadableThing
         if (inUse) return;
 
         var comp = __instance.pawn?.GetComp<CompSidearms>();
-        if (comp == null || comp.Sidearms.Count == 0) return;
+        if (comp == null || !comp.HasMarkedSidearms) return;
 
         // Written through the list rather than TryAdd: adding through the ThingOwner would take
         // ownership of the weapons away from the pawn. This container is a view, and the pawn's own

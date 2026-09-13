@@ -5,7 +5,9 @@ using Verse.AI;
 namespace Sidearms;
 
 /// <summary>
-/// Adds "Carry as sidearm" when right-clicking a weapon on the ground.
+/// Adds "Carry as sidearm" when right-clicking a weapon on the ground. When every carried weapon is
+/// a sidearm there is nothing to mark, so the option is worded as what it does, and it stays: the
+/// vanilla pick-up option is hidden on the player's own map.
 ///
 /// FloatMenuMakerMap builds its provider list by reflecting over every non-abstract subclass of
 /// FloatMenuOptionProvider, so subclassing is enough; there is nothing to register and nothing
@@ -32,7 +34,9 @@ public class FloatMenuOptionProvider_TakeSidearm : FloatMenuOptionProvider
         if (!clickedThing.Spawned) return null;
 
         var weapon = (ThingWithComps)clickedThing;
-        var label = "Sidearms_TakeAsSidearm".Translate(weapon.LabelShort);
+        var everythingIsASidearm = SidearmsMod.Settings.allCarriedWeaponsAreSidearms;
+        var label = (everythingIsASidearm ? "Sidearms_PickUpWeapon" : "Sidearms_TakeAsSidearm")
+            .Translate(weapon.LabelShort);
 
         if (pawn.WorkTagIsDisabled(WorkTags.Violent))
         {
@@ -40,7 +44,7 @@ public class FloatMenuOptionProvider_TakeSidearm : FloatMenuOptionProvider
         }
 
         var comp = pawn.GetComp<CompSidearms>();
-        if (!comp.HasRoomFor(weapon))
+        if (!everythingIsASidearm && !comp.HasRoomFor(weapon))
         {
             return Disabled(label, "Sidearms_NoRoom".Translate());
         }

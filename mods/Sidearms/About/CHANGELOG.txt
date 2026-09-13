@@ -1,7 +1,8 @@
 [b]1.2[/b]
 [list]
+[*]Every weapon a colonist carries now gets a swap button, however it got into their inventory, so there is nothing to mark and no limit to manage. Turn off "Every carried weapon is a sidearm" in mod settings to keep choosing sidearms by hand. Colonies that were already running an older version keep the old behaviour.
+[*]A sidearm another mod borrows to work with, such as Grab Your Tool! drawing the axe you carry to chop a tree, is a sidearm again when the job ends and it goes back in the pack. It used to come back with no button.
 [*]An auto-swap no longer forces the pawn back onto the target it had before the swap. Pawns retarget normally instead of charging the enemy they were shooting at, or emptying a magazine into a downed one. An attack you ordered by hand is still resumed.
-[*]Weapons another mod stows in a pawn's inventory, such as Grab Your Tool! swapping to a tool for a job, are now carried as sidearms, so the swap gizmo no longer disappears once the job is done.
 [/list]
 
 [b]1.1[/b]
@@ -16,5 +17,5 @@
 [*]Carry weapons as sidearms, swap by gizmo.
 [*]Auto-draw melee in melee, auto-restore the previous weapon afterwards.
 [*]Optional auto-swap to a longer-ranged weapon.
-[*]Raiders and other faction pawns use sidearms too, and gunners spawn with a melee weapon.
+[*]Raiders and other faction pawns use sidearms too, and gunners spawn with a cheap melee weapon.
 [/list]

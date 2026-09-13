@@ -2,9 +2,13 @@
 <LanguageData>
 
   <Sidearms_TakeAsSidearm>Carry {0} as sidearm</Sidearms_TakeAsSidearm>
+  <Sidearms_PickUpWeapon>Pick up {0}</Sidearms_PickUpWeapon>
   <Sidearms_NoRoom>no room for another sidearm</Sidearms_NoRoom>
   <Sidearms_SwapTo_Desc>Put away the current weapon and draw the {0}.</Sidearms_SwapTo_Desc>
   <Sidearms_Inspect>Sidearms: {0}</Sidearms_Inspect>
+
+  <Sidearms_Setting_AllCarried>Every carried weapon is a sidearm</Sidearms_Setting_AllCarried>
+  <Sidearms_Setting_AllCarried_Tip>A pawn gets a swap button for every weapon in their inventory, however it got there. Turn this off to pick sidearms out by hand with "Carry as sidearm"; only those get a button, and the limits below apply to them.</Sidearms_Setting_AllCarried_Tip>
 
   <Sidearms_Setting_MaxSidearms>Maximum sidearms per pawn: {0}</Sidearms_Setting_MaxSidearms>
   <Sidearms_Setting_MassFraction>Share of carry capacity sidearms may use: {0}</Sidearms_Setting_MassFraction>

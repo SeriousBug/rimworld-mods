@@ -19,9 +19,14 @@ public class CompSidearms : ThingComp
     // pawn is holding what it wants to hold.
     private ThingWithComps preferredPrimary;
 
-    // A weapon that just left the pawn's hands. Whether it landed in the pawn's own inventory is
-    // not known until the transfer finishes, so the answer is read on the next tick.
-    private ThingWithComps leftHands;
+    // A sidearm another mod put in the pawn's hands for a job. It stops being a sidearm the moment
+    // it becomes the primary, and nothing puts it back when the job ends and it is stowed again.
+    private ThingWithComps borrowedSidearm;
+    private int borrowedTick;
+
+    // Long enough for a work job, short enough that a weapon the pawn parted with for good is not
+    // reclaimed hours later.
+    private const int BorrowExpiryTicks = 2500;
 
     private int lastSwapTick = -99999;
     private int sinceLastCheck;
@@ -45,14 +50,29 @@ public class CompSidearms : ThingComp
         sincePolicySync = Mathf.Abs(parent.thingIDNumber) % PolicySyncIntervalTicks;
     }
 
+    /// <summary>
+    /// The weapons the pawn can swap to. Every weapon they carry, unless the player asked to pick
+    /// their sidearms out by hand.
+    /// </summary>
     public List<ThingWithComps> Sidearms
     {
         get
         {
             DropStaleEntries();
-            return sidearms;
+            if (!SidearmsMod.Settings.allCarriedWeaponsAreSidearms) return sidearms;
+
+            var carried = new List<ThingWithComps>();
+            foreach (var thing in Pawn.inventory.innerContainer)
+            {
+                if (SidearmsUtility.IsEligibleWeapon(thing)) carried.Add((ThingWithComps)thing);
+            }
+
+            return carried;
         }
     }
+
+    /// <summary>Weapons the player marked, which is not the same set as the swappable ones.</summary>
+    public bool HasMarkedSidearms => sidearms.Count > 0;
 
     public ThingWithComps PreferredPrimary => preferredPrimary;
 
@@ -65,10 +85,15 @@ public class CompSidearms : ThingComp
         Scribe_References.Look(ref preferredPrimary, "preferredPrimary");
         Scribe_Values.Look(ref lastSwapTick, "lastSwapTick", -99999);
 
+        Scribe_References.Look(ref borrowedSidearm, "borrowedSidearm");
+        Scribe_Values.Look(ref borrowedTick, "borrowedTick", 0);
+
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
             sidearms ??= new List<ThingWithComps>();
             sidearms.RemoveAll(w => w == null);
+
+            if (sidearms.Count > 0) SidearmsMod.Settings.NotifyLoadedSaveHasMarkedSidearms();
         }
     }
 
@@ -78,8 +103,6 @@ public class CompSidearms : ThingComp
 
     private void Evaluate(int delta)
     {
-        AdoptStowedWeapon();
-
         sincePolicySync += delta;
         if (sincePolicySync >= PolicySyncIntervalTicks)
         {
@@ -93,39 +116,52 @@ public class CompSidearms : ThingComp
         if (sinceLastCheck < CheckIntervalTicks) return;
         sinceLastCheck = 0;
 
+        ReclaimBorrowedSidearm();
         AutoSwitch.Evaluate(this);
     }
 
     /// <summary>
-    /// Called when a weapon leaves the pawn's hands, whatever moved it. It is not in the inventory
-    /// yet: a transfer takes the weapon out of one container before putting it in the other.
+    /// Another mod equipped a sidearm to do a job with it, which unregistered it. Remembered here so
+    /// it can be marked again when it comes back, rather than losing its button to a chopped tree.
     /// </summary>
-    public void NotifyPrimaryRemoved(ThingWithComps weapon) => leftHands = weapon;
-
-    /// <summary>
-    /// Picks up a weapon another mod stowed in the pawn's inventory out of their hands, so it keeps
-    /// its gizmo and the pawn can swap back to it. Grab Your Tool! does this every time a colonist
-    /// picks up a tool for a job.
-    /// </summary>
-    private void AdoptStowedWeapon()
+    public void NotifyBorrowedSidearm(ThingWithComps weapon)
     {
-        var weapon = leftHands;
-        leftHands = null;
+        borrowedSidearm = weapon;
+        borrowedTick = Find.TickManager.TicksGame;
+        SidearmsMod.DevLog($"{Pawn.LabelShort}: {weapon.LabelCap} was a sidearm and is now in hand; watching for it to come back.");
+    }
 
-        if (weapon == null || weapon.Destroyed) return;
-        if (!SidearmsUtility.IsEligibleWeapon(weapon)) return;
-        if (!Pawn.inventory.innerContainer.Contains(weapon)) return;
+    private void ReclaimBorrowedSidearm()
+    {
+        if (borrowedSidearm == null) return;
 
-        // No room check: the weapon is in the inventory either way, and a carried weapon with no
-        // gizmo is the bug being fixed here.
-        Register(weapon);
+        if (borrowedSidearm.Destroyed || Find.TickManager.TicksGame - borrowedTick > BorrowExpiryTicks)
+        {
+            borrowedSidearm = null;
+            return;
+        }
+
+        if (!Pawn.inventory.innerContainer.Contains(borrowedSidearm)) return;
+
+        var weapon = borrowedSidearm;
+        borrowedSidearm = null;
+
+        // No room check: it was a sidearm before it was borrowed, and it is in the inventory either
+        // way. Refusing it here would leave a carried weapon with no button, which is the bug.
+        if (Register(weapon))
+        {
+            SidearmsMod.DevLog($"{Pawn.LabelShort}: {weapon.LabelCap} came back to the inventory, marked as a sidearm again.");
+        }
     }
 
     public bool IsSidearm(Thing weapon) => sidearms.Contains(weapon);
 
-    public void Register(ThingWithComps weapon)
+    /// <returns>Whether the weapon was not already tracked.</returns>
+    public bool Register(ThingWithComps weapon)
     {
-        if (!sidearms.Contains(weapon)) sidearms.Add(weapon);
+        if (sidearms.Contains(weapon)) return false;
+        sidearms.Add(weapon);
+        return true;
     }
 
     public void Unregister(ThingWithComps weapon)
@@ -149,17 +185,29 @@ public class CompSidearms : ThingComp
     /// </summary>
     public void NotifyPrimaryChangedExternally() => preferredPrimary = null;
 
+    /// <summary>
+    /// A sidearm stops being one the moment it leaves the inventory: dropped, destroyed, hauled off
+    /// by another pawn, or promoted to primary. Null when the weapon is still a sidearm.
+    /// </summary>
+    private string StaleReason(ThingWithComps weapon)
+    {
+        if (weapon == null) return "the entry was null";
+        if (weapon.Destroyed) return "it was destroyed";
+        if (!Pawn.inventory.innerContainer.Contains(weapon)) return "it is no longer in the inventory";
+        return null;
+    }
+
     private void DropStaleEntries()
     {
-        // A sidearm stops being one the moment it leaves the inventory: dropped, destroyed,
-        // hauled off by another pawn, or promoted to primary.
-        sidearms.RemoveAll(w =>
-            w == null || w.Destroyed || !Pawn.inventory.innerContainer.Contains(w));
+        if (preferredPrimary is { Destroyed: true }) preferredPrimary = null;
 
-        if (preferredPrimary != null && preferredPrimary.Destroyed)
+        sidearms.RemoveAll(w =>
         {
-            preferredPrimary = null;
-        }
+            var reason = StaleReason(w);
+            if (reason == null) return false;
+            SidearmsMod.DevLog($"{Pawn.LabelShort}: dropping sidearm {w?.LabelCap}, {reason}.");
+            return true;
+        });
     }
 
     // Sidearms another mod's policy is responsible for are not counted. That mod has its own count

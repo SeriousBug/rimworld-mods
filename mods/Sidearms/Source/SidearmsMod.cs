@@ -18,6 +18,12 @@ public class SidearmsMod : Mod
         Log.Message($"{LogPrefix} loaded.");
     }
 
+    /// <summary>Tracing for diagnosing a report, off unless the player has dev mode on.</summary>
+    public static void DevLog(string message)
+    {
+        if (Prefs.DevMode) Log.Message($"{LogPrefix} {message}");
+    }
+
     public override string SettingsCategory() => "Connor's Sidearms!";
 
     public override void DoSettingsWindowContents(Rect inRect) => Settings.DoWindowContents(inRect);
