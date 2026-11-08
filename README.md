@@ -1,6 +1,6 @@
 # Connor's RimWorld mods
 
-Mods for [RimWorld](https://rimworldgame.com/) 1.6. Each one is a small, self-contained quality-of-life
+Mods for [RimWorld](https://rimworldgame.com/) 1.6 and 1.7. Each one is a small, self-contained quality-of-life
 mod that fixes something the base game makes tedious. They can be used together or on their own.
 
 All of them need [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077).

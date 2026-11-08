@@ -2,13 +2,14 @@
 # Shared paths. Source this; do not execute it.
 set -euo pipefail
 
-RIMWORLD_APP="${RIMWORLD_APP:-$HOME/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app}"
+RIMWORLD_GAME_DIR="${RIMWORLD_GAME_DIR:-$HOME/Library/Application Support/Steam/steamapps/common/RimWorld}"
+RIMWORLD_APP="${RIMWORLD_APP:-$RIMWORLD_GAME_DIR/RimWorld.app}"
 
-# The app bundle has two "Data" directories and they hold different things.
-RIMWORLD_MANAGED="$RIMWORLD_APP/Contents/Resources/Data/Managed"   # DLLs
-RIMWORLD_DATA="$RIMWORLD_APP/Data"                                 # Defs, Textures
-RIMWORLD_MODS="$RIMWORLD_APP/Mods"
-RIMWORLD_VERSION_FILE="$RIMWORLD_APP/Version.txt"
+# The rewritten macOS build keeps assemblies in the app bundle and mods beside it.
+RIMWORLD_MANAGED="$RIMWORLD_APP/Contents/MacOS"
+RIMWORLD_DATA="$RIMWORLD_GAME_DIR/Data"
+RIMWORLD_MODS="$RIMWORLD_GAME_DIR/Mods"
+RIMWORLD_VERSION_FILE="$RIMWORLD_GAME_DIR/Version.txt"
 
 # Belongs to Ludeon. ~/Library/Logs/Unity/Player.log is a different game entirely.
 PLAYER_LOG="$HOME/Library/Logs/Ludeon Studios/RimWorld by Ludeon Studios/Player.log"

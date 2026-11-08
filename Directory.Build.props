@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(RimWorldApp)' == ''">
-    <RimWorldApp>$(HOME)/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app</RimWorldApp>
+    <RimWorldApp>$(HOME)/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorld.app</RimWorldApp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(RimWorldManaged)' == ''">
-    <RimWorldManaged>$(RimWorldApp)/Contents/Resources/Data/Managed</RimWorldManaged>
+    <RimWorldManaged>$(RimWorldApp)/Contents/MacOS</RimWorldManaged>
   </PropertyGroup>
 
   <Target Name="CheckRimWorldManaged" BeforeTargets="ResolveAssemblyReferences">
